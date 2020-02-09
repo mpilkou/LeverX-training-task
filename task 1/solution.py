@@ -3,7 +3,6 @@ import json
 class Controller:
 
     def __init__(self, students_path, rooms_path):
-        print("{} = {}".format(students_path, rooms_path))
         
         if self.check_file_not_exists(students_path) and self.check_file_not_exists(rooms_path):
             exit()
@@ -22,12 +21,12 @@ class Controller:
                 self.rooms[student['room']].addStudent(Student(student['id'],student['name'],student['room']))
 
     def export_json(self):
-        with open('formated.json', 'w') as outfile:
+        with open('solution.json', 'w') as outfile:
             json.dump([ r.to_json() for r in self.rooms.values() ], outfile, indent=2)
     
     
     def export_xml(self):
-        with open('formated.xml', 'w') as outfile:
+        with open('solution.xml', 'w') as outfile:
             for r in self.rooms.values():
                 outfile.write('<room id=\"{r_id}\"> \n<name>{r_name}</name> \n<students>\n'.format(r_id = r.id, r_name = r.name))
                 
@@ -91,3 +90,14 @@ class Room:
 
     def to_json(self):
         return {'id': self._id, 'name':self._name, 'students': [s.to_json() for s in self._students]}
+
+if __name__ == "__main__":
+
+    controll = Controller(students_path = 'students.json', rooms_path = 'rooms.json')
+
+    controll.add_rooms_from_json()
+
+    controll.export_json()
+    controll.export_xml()
+
+    controll2 = Controller('students.jsona', 'students.jsona')
