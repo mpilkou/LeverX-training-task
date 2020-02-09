@@ -22,7 +22,7 @@ class Controller:
             for student in json.load(myfile):
                 self.rooms[student['room']].addStudent(Student(student['id'],student['name'],student['room']))
 
-    def import_json(self):
+    def export_json(self):
         with open('formated.json', 'w') as outfile:
             json.dump([ r.to_json() for r in self.rooms.values() ], outfile, indent=2)
     
