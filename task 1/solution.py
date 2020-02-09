@@ -4,9 +4,11 @@ class Controller:
 
     def __init__(self, students_path, rooms_path, output = 'json'):
         
+        # chech files existens
         if self.check_file_not_exists(students_path) and self.check_file_not_exists(rooms_path):
             exit()
 
+        # check format of output
         if not (output in ['json','xml']):
             print('Incorrect format of output try xml of json')
             exit()
@@ -16,18 +18,22 @@ class Controller:
         self.output = output
         self.rooms = {}
 
+    # give output
     def export(self):
         if self.output == 'xml':
             self.export_xml()
         else:
             self.export_json()
 
-
+    # add students to rooms
     def add_rooms_from_json(self):
+
+        # add rooms
         with open(self.rooms_path, 'r') as myfile: 
             for room in json.load(myfile):
                 self.rooms[room['id']] = Room(room['id'],room['name'])
         
+        # add students to rooms
         with open(self.students_path, 'r') as myfile:
             for student in json.load(myfile):
                 self.rooms[student['room']].addStudent(Student(student['id'],student['name'],student['room']))
@@ -47,6 +53,7 @@ class Controller:
                 
                 outfile.write('</students> </room>\n')
 
+    # check files existense
     def check_file_not_exists(self, path):
         try:
             open(path, "r")
