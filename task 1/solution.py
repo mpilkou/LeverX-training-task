@@ -2,14 +2,26 @@ import json
 
 class Controller:
 
-    def __init__(self, students_path, rooms_path):
+    def __init__(self, students_path, rooms_path, output = 'json'):
         
         if self.check_file_not_exists(students_path) and self.check_file_not_exists(rooms_path):
+            exit()
+
+        if not (output in ['json','xml']):
+            print('Incorrect format of output try xml of json')
             exit()
         
         self.students_path = students_path
         self.rooms_path = rooms_path
+        self.output = output
         self.rooms = {}
+
+    def export(self):
+        if self.output == 'xml':
+            self.export_xml()
+        else:
+            self.export_json()
+
 
     def add_rooms_from_json(self):
         with open(self.rooms_path, 'r') as myfile: 
@@ -91,13 +103,16 @@ class Room:
     def to_json(self):
         return {'id': self._id, 'name':self._name, 'students': [s.to_json() for s in self._students]}
 
+
+
 if __name__ == "__main__":
 
-    controll = Controller(students_path = 'students.json', rooms_path = 'rooms.json')
+    import sys
 
+    if len(sys.argv) < 3:
+        print('give 3 arguments - path to students.json, path to rooms.json, output (json,xml)')
+        exit()
+
+    controll = Controller(students_path = sys.argv[1], rooms_path = sys.argv[2], output = sys.argv[3])
     controll.add_rooms_from_json()
-
-    controll.export_json()
-    controll.export_xml()
-
-    controll2 = Controller('students.jsona', 'students.jsona')
+    controll.export()
