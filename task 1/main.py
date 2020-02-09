@@ -9,6 +9,7 @@ if __name__ == "__main__":
     print(controll.add_rooms_from_json())
 
     controll.export_json()
+    controll.export_xml()
 
     controll2 = Controller('students.jsona', 'students.jsona')
 

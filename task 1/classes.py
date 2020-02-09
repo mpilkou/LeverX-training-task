@@ -1,5 +1,4 @@
 import json
-from json import JSONEncoder
 
 class Controller:
 
@@ -26,11 +25,16 @@ class Controller:
         with open('formated.json', 'w') as outfile:
             json.dump([ r.to_json() for r in self.rooms.values() ], outfile, indent=2)
     
-
-    def print_json_file(self, path):
-        with open(path, "r") as file: 
-            data = json.load(file)
-            print(data)
+    
+    def export_xml(self):
+        with open('formated.xml', 'w') as outfile:
+            for r in self.rooms.values():
+                outfile.write('<room id=\"{r_id}\"> \n<name>{r_name}</name> \n<students>\n'.format(r_id = r.id, r_name = r.name))
+                
+                for s in r.students:
+                    outfile.write('\t<student id=\"{s_id}\"> {s_name} </student>\n'.format(s_id = s.id ,s_name = s.name))
+                
+                outfile.write('</students> </room>\n')
 
     def check_file_not_exists(self, path):
         try:
