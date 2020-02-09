@@ -1,2 +1,1 @@
 # LeverX
-LeverX Python Course
