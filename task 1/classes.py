@@ -1,18 +1,25 @@
+import json
+
 class Controller:
-    import json
+
+    def __init__(self, students, rooms):
+        print("{} = {}".format(students, rooms))
+        if self.check_file_not_exists(students) and self.check_file_not_exists(rooms):
+            exit()
+
 
     def print_json_file(self, path):
         with open(path, "r") as file: 
-            data = self.json.load(file)
+            data = json.load(file)
             print(data)
 
-    def check_file_existens(self, path):
+    def check_file_not_exists(self, path):
         try:
             open(path, "r")
-            return True
-        except FileNotFoundError:
-            print("File not exist")
             return False
+        except FileNotFoundError:
+            print("File " + path + " not exist")
+            return True
 
 class Student:
     
