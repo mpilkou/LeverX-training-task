@@ -1,17 +1,13 @@
 class Version:
     def __init__(self, version):
-        
         self.pre_proces(version)
-
         self.version = version.split('.')
 
     def pre_proces(self, version):
-        version = version.replace('pre-alpha', 'p')
-        version = version.replace('-alpha', 'a')
+        version = version.replace('-', '')
+        version = version.replace('prealpha', 'p')
         version = version.replace('alpha', 'a')
-        version = version.replace('-beta', 'b')
         version = version.replace('beta', 'b')
-        version = version.replace('-rc', 'r')
         return version
 
     def __eq__(self, other):
