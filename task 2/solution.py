@@ -1,6 +1,18 @@
 class Version:
     def __init__(self, version):
+        
+        self.pre_proces(version)
+
         self.version = version.split('.')
+
+    def pre_proces(self, version):
+        version = version.replace('pre-alpha', 'p')
+        version = version.replace('-alpha', 'a')
+        version = version.replace('alpha', 'a')
+        version = version.replace('-beta', 'b')
+        version = version.replace('beta', 'b')
+        version = version.replace('-rc', 'r')
+        return version
 
     def __eq__(self, other):
         if len(self.version) == len(other.version):
@@ -10,6 +22,15 @@ class Version:
             return True
         return False
 
+    # TODO
+    def __gt__(self, other):
+        print('--------')
+        print(self.version)
+        print(other.version)
+
+        # get min from 2 versions
+        compare_len = len(self.version) if len(self.version) < len(other.version) else len(other.version)
+        
 
 
 def main():
