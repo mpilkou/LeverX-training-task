@@ -17,12 +17,8 @@ class Version:
                     return False
             return True
         return False
-
-    # TODO
+    
     def __gt__(self, other):
-        print('--------')
-        print(self.version)
-        print(other.version)
 
         # get min from 2 versions
         compare_len = len(self.version) if len(self.version) < len(other.version) else len(other.version)
@@ -54,6 +50,13 @@ class Version:
                     elif self.version[i][j] < other.version[i][j]:
                         return False
                     # else: a == a
+            # 0rc < 0
+            if len(self.version[i]) < len(other.version[i]):
+                return True
+
+        # 1.0.0.1 > 1.0.0
+        if len(self.version) > len(other.version):
+            return True
         # self == other
         return False   
 
@@ -69,7 +72,7 @@ def main():
     ]
 
     for version_1, version_2 in to_test:
-        #assert Version(version_1) < Version(version_2), 'le failed'
+        assert Version(version_1) < Version(version_2), 'le failed'
         assert Version(version_2) > Version(version_1), 'ge failed'
         assert Version(version_2) != Version(version_1), 'neq failed'
 
