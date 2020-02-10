@@ -5,7 +5,7 @@ class Version:
 
     def pre_proces(self, version):
         version = version.replace('-', '')
-        version = version.replace('prealpha', 'p')
+        version = version.replace('prealpha', 'P')
         version = version.replace('alpha', 'a')
         version = version.replace('beta', 'b')
         return version
