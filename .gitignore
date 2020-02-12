@@ -1,3 +1,7 @@
+# ignore solution files
+solution.*
+!solution.py
+
 # ignore materials
 lections/
 
