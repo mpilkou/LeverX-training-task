@@ -1,3 +1,7 @@
+#!/usr/bin/python3.6
+
+# in python 3.6 i don't need to use functools.total_ordering
+
 class Version:
     def __init__(self, version):
         version = self.pre_proces(version)
