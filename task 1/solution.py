@@ -42,18 +42,23 @@ class Controller:
 
     def export_json(self):
         with open('solution.json', 'w') as outfile:
-            json.dump([ r.to_json() for r in self.rooms.values() ], outfile, indent=2)
+            for r in self.rooms.values():
+                json.dump(r, outfile, indent=2, default=self.my_jsonEncoder)
     
     
     def export_xml(self):
         with open('solution.xml', 'w') as outfile:
             for r in self.rooms.values():
-                outfile.write('<room id=\"{r_id}\"> \n<name>{r_name}</name> \n<students>\n'.format(r_id = r.id, r_name = r.name))
+                outfile.write('<room id=\"{r_id}\"> \n<name>{r_name}</name> \n\t<students>\n'.format(r_id = r.id, r_name = r.name))
                 
                 for s in r.students:
-                    outfile.write('\t<student id=\"{s_id}\"> {s_name} </student>\n'.format(s_id = s.id ,s_name = s.name))
+                    outfile.write('\t\t<student id=\"{s_id}\"> {s_name} </student>\n'.format(s_id = s.id ,s_name = s.name))
                 
-                outfile.write('</students> </room>\n')
+                outfile.write('\t</students> \n</room>\n')
+
+    @staticmethod
+    def my_jsonEncoder(object):
+        return object.to_json()
 
     # check files existense
     def check_file_not_exists(self, path):
