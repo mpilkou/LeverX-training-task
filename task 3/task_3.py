@@ -1,25 +1,20 @@
 from threading import Thread, Lock
+from concurrent.futures import ThreadPoolExecutor
 
-a = 0
 
-
-def function(arg, lock):
-    global a
-    with lock:
-        for _ in range(arg):
-            a += 1
+def function(arg):
+    a = 0
+    for _ in range(arg):
+        a += 1
+    return a
 
 
 def main():
-    threads = []
-    lock = Lock()
-    for _ in range(5):
-        thread = Thread(target=function, args=(1000000,lock))
-        thread.start()
-        threads.append(thread)
+    
+    with ThreadPoolExecutor(max_workers=5) as executor:
+        future = executor.submit(function, 5000000)
+        future.result()
 
-    [t.join() for t in threads]
-    print("----------------------", a)  # ???
-
+        print("----------------------", future.result())
 
 main()
