@@ -4,27 +4,15 @@ import json
 
 class Controller:
 
-    def __init__(self, students_path, rooms_path, output_path = 'solution.json'):
+    def __init__(self, students_path, rooms_path):
         
         # chech files existens
         if self.check_file_not_exists(students_path) and self.check_file_not_exists(rooms_path):
             exit()
 
-        # check format of output_path
-        if not (output_path[-4:] in ['json','.xml']):
-            print('Incorrect format of output_path try xml of json')
-            exit()
         self.students_path = students_path
         self.rooms_path = rooms_path
-        self.output_path = output_path
         self.rooms = {}
-
-    # give output_path
-    def export(self):
-        if self.output_path[-3:] == 'xml':
-            self.export_xml()
-        else:
-            self.export_json()
 
     # add students to rooms
     def add_rooms_from_json(self):
@@ -39,12 +27,13 @@ class Controller:
             for student in json.load(myfile):
                 self.rooms[student['room']].addStudent(Student(student['id'],student['name'],student['room']))
 
-    def export_json(self):
-        with open(self.output_path, 'w') as outfile:
+    def export_json(self, output_path = 'solution.json'):
+        
+        with open(output_path, 'w') as outfile:
             json.dump(list(self.rooms.values()), outfile, indent=2, default=self.my_jsonEncoder)
     
-    def export_xml(self):
-        with open(self.output_path, 'w') as outfile:
+    def export_xml(self, output_path = 'solution.xml'):
+        with open(output_path, 'w') as outfile:
             for r in self.rooms.values():
                 outfile.write('<room id=\"{r_id}\"> \n<name>{r_name}</name> \n\t<students>\n'.format(r_id = r.id, r_name = r.name))
                 
@@ -124,6 +113,11 @@ if __name__ == "__main__":
         print('give 3 arguments - path to students.json, path to rooms.json, output_path path (<name>.json,xml)')
         exit()
 
-    controll = Controller(students_path = sys.argv[1], rooms_path = sys.argv[2], output_path = sys.argv[3])
+    controll = Controller(students_path = sys.argv[1], rooms_path = sys.argv[2])
     controll.add_rooms_from_json()
-    controll.export()
+
+    if sys.argv[3][-3:] == 'xml':
+        controll.export_xml(output_path = sys.argv[3])
+    else:
+        controll.export_json(output_path = sys.argv[3])
+        
