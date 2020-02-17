@@ -1,7 +1,7 @@
 CREATE DATABASE leverx_task4_db COLLATE utf8_general_ci;
 CREATE TABLE Rooms (
     id int UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    name varchar(50)
+    name varchar(50) NOT NULL
 );
 CREATE TABLE Students (
     id int UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,

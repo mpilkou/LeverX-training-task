@@ -1,6 +1,16 @@
-#!/usr/bin/python3.6
+#!/usr/bin/python3
 
 import json
+import mysql.connector
+
+class Model:
+    def __init__(self):
+
+        cnx = mysql.connector.connect(user='root', password='root',
+                              host='127.0.0.1',
+                              database='leverx_task4_db',
+                              auth_plugin='mysql_native_password')
+        cnx.close()
 
 class Controller:
 
@@ -40,6 +50,9 @@ class Controller:
                     outfile.write('\t\t<student id=\"{s_id}\"> {s_name} </student>\n'.format(s_id = s.id ,s_name = s.name))
                 
                 outfile.write('\t</students> \n</room>\n')
+
+    def export_to_db(self, ):
+        pass
 
     @staticmethod
     def my_jsonEncoder(object):
@@ -105,18 +118,20 @@ class Room:
 
 
 if __name__ == "__main__":
+    m = Model()
 
-    import sys
+    def ddd():
+        import sys
 
-    if len(sys.argv) < 3:
-        print('give 3 arguments - path to students.json, path to rooms.json, output_path path (<name>.json,xml)')
-        exit()
+        if len(sys.argv) < 3:
+            print('give 3 arguments - path to students.json, path to rooms.json, output_path path (<name>.json,xml)')
+            exit()
 
-    controll = Controller(students_path = sys.argv[1], rooms_path = sys.argv[2])
-    controll.add_rooms_from_json()
+        controll = Controller(students_path = sys.argv[1], rooms_path = sys.argv[2])
+        controll.add_rooms_from_json()
 
-    if sys.argv[3][-3:] == 'xml':
-        controll.export_xml(output_path = sys.argv[3])
-    else:
-        controll.export_json(output_path = sys.argv[3])
+        if sys.argv[3][-3:] == 'xml':
+            controll.export_xml(output_path = sys.argv[3])
+        else:
+            controll.export_json(output_path = sys.argv[3])
         
