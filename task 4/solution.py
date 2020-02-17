@@ -5,12 +5,14 @@ import mysql.connector
 
 class Model:
     def __init__(self):
-
-        cnx = mysql.connector.connect(user='root', password='root',
+        self.connection = mysql.connector.connect(user='root', password='root',
                               host='127.0.0.1',
                               database='leverx_task4_db',
                               auth_plugin='mysql_native_password')
-        cnx.close()
+        
+    
+    def __del__(self):
+        self.connection.close()
 
 class Controller:
 
