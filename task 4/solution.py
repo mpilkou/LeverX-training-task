@@ -1,7 +1,9 @@
 #!/usr/bin/python3
 
 import json
+import typing
 import mysql.connector
+from classes import Student, Room
 
 class Model:
     def __init__(self, **kwargs):
@@ -12,21 +14,21 @@ class Model:
                                 database =  kwargs.get('database') or 'leverx_task4_db',
                                 auth_plugin=kwargs.get('auth_plugin') or 'mysql_native_password')
     
-    def insert_student(self, student):
+    def insert_student(self, student : Student) -> None:
         my_cursor = self.connection.cursor()
         sql = "INSERT INTO Students (id, name, sex, birthday, room_id) VALUES (%s, %s, %s, %s, %s)"
         val = (student.id, student.name, student.sex, student.birthday, student.room)
         my_cursor.execute(sql, val)
         self.connection.commit()
 
-    def insert_room(self, room):
+    def insert_room(self, room : Room) -> None:
         my_cursor = self.connection.cursor()
         sql = "INSERT INTO Rooms (id, name) VALUES (%s, %s)"
         val = (room.id, room.name)
         my_cursor.execute(sql, val)
         self.connection.commit()
     
-    def insert_students_from_room(self, room):
+    def insert_students_from_room(self, room: Room) -> None:
         my_cursor = self.connection.cursor()
         sql = "INSERT INTO Students (id, name, sex, birthday, room_id) VALUES (%s, %s, %s, %s, %s)"
         val = [
@@ -35,7 +37,7 @@ class Model:
         my_cursor.executemany(sql, val)
         self.connection.commit()
 
-    def insert_rooms(self, rooms):
+    def insert_rooms(self, rooms: typing.Iterable[Room]) -> None:
         my_cursor = self.connection.cursor()
         sql = "INSERT INTO Rooms (id, name) VALUES (%s, %s)"
         val = [
@@ -61,7 +63,7 @@ class Controller:
         self.rooms = {}
 
     # add students to rooms
-    def concatinate_students_to_rooms_from_json(self):
+    def concatinate_students_to_rooms_from_json(self) -> None:
         
         # add rooms
         for room in self.import_rooms_from_json():
@@ -71,114 +73,53 @@ class Controller:
         for student in self.import_students_from_json():
             self.rooms[student].addStudent(student)
     
-    def import_rooms_from_json(self):
+    def import_rooms_from_json(self) -> None:
         with open(self.rooms_path, 'r') as rooms_file: 
             for room in json.load(rooms_file):
                 yield Room(**room)
 
-    def import_students_from_json(self):
+    def import_students_from_json(self) -> None:
         with open(self.students_path, 'r') as students_file:
             for student in json.load(students_file):
                 yield Student(**student)
 
-    def export_json(self, output_path = 'solution.json'):
+    def export_json(self, output_path : str) -> None:
+        
+        if not output_path:
+            output_path = 'solution.json'
+
         with open(output_path, 'w') as outfile:
             json.dump(list(self.rooms.values()), outfile, indent=2, default=self.my_jsonEncoder)
     
-    def export_xml(self, output_path = 'solution.xml'):
+    def export_xml(self, output_path : str) -> None:
+
+        if not output_path:
+            output_path = 'solution.xml'
+
         with open(output_path, 'w') as outfile:
             for r in self.rooms.values():
                 # generator of students in rooms write
                 for i in r.to_xml():
                     outfile.write(i)
 
-    def export_to_db(self):
+    def export_to_db(self) -> None:
         self._model.insert_rooms(self.rooms.values())
 
         for room in self.rooms.values():
             self._model.insert_students_from_room(room)
 
     @staticmethod
-    def my_jsonEncoder(object):
-        return object.to_json()
+    def my_jsonEncoder(obj: object):
+        return obj.to_json()
 
     # check files existense
-    def check_file_not_exists(self, path):
+    def check_file_not_exists(self, path : str) -> bool:
         try:
             open(path, "r")
             return False
         except FileNotFoundError:
             print("File " + path + " not exist")
             return True
-
-class Student:
-    
-    def __init__(self, **kwargs):
-        self._id = kwargs['id']
-        self._name = kwargs['name']
-        self._room = kwargs['room']
-        self._birthday = kwargs['birthday']
-        self._sex = kwargs['sex']
-
-    @property
-    def id(self):
-        return self._id
-
-    @property
-    def name(self):
-        return self._name
-
-    @property
-    def room(self):
-        return self._room
-
-    @property
-    def birthday(self):
-        return self._birthday
-
-    @property
-    def sex(self):
-        return self._sex
-
-
-    def to_json(self):
-        return {'id': self._id, 'name':self._name}
-
-    def to_xml(self):
-        return '\t\t<student id=\"{s_id}\"> {s_name} </student>\n'.format(s_id = self.id ,s_name = self.name)
-
-
-class Room:
-    
-    def __init__(self, **kwargs):
-        self._id = kwargs['id']
-        self._name = kwargs['name']
-        self._students = []
-
-    @property
-    def id(self):
-        return self._id
-
-    @property
-    def name(self):
-        return self._name
-
-    @property
-    def students(self):
-        return self._students
-
-    def addStudent(self, student):
-        self._students.append(student)
-
-    def to_json(self):
-        return {'id': self._id, 'name':self._name, 'students': [s.to_json() for s in self._students]}
-
-    def to_xml(self):
-        yield '<room id=\"{r_id}\"> \n<name>{r_name}</name> \n\t<students>\n'.format(r_id = self.id, r_name = self.name)
-        for s in self.students:
-            yield s.to_xml()
-        yield '\t</students> \n</room>\n'
-
 
 
 if __name__ == "__main__":
