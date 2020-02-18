@@ -4,11 +4,13 @@ import json
 import mysql.connector
 
 class Model:
-    def __init__(self):
-        self.connection = mysql.connector.connect(user='root', password='root',
-                              host='127.0.0.1',
-                              database='leverx_task4_db',
-                              auth_plugin='mysql_native_password')
+    def __init__(self, **kwargs):
+        self.connection = mysql.connector.connect(
+                                user =      kwargs.get('user') or 'root', 
+                                password=   kwargs.get('root') or 'root',
+                                host =      kwargs.get('host') or '127.0.0.1',
+                                database =  kwargs.get('database') or 'leverx_task4_db',
+                                auth_plugin=kwargs.get('auth_plugin') or 'mysql_native_password')
         
     
     def __del__(self):
