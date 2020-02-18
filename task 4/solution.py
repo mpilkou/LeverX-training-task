@@ -13,12 +13,11 @@ class Model:
                                 auth_plugin=kwargs.get('auth_plugin') or 'mysql_native_password')
         
     
-    # TODO
+    
     def insert_student(self, student):
         my_cursor = self.connection.cursor()
-        sql = "INSERT INTO Students (id, name) VALUES (%s, %s)"
-        
-        val = (student.id, student.name)
+        sql = "INSERT INTO Students (id, name, sex, birthday, room_id) VALUES (%s, %s, %s, %s, %s)"
+        val = (student.id, student.name, student.sex, student.birthday, student.room)
         my_cursor.execute(sql, val)
         self.connection.commit()
 
@@ -164,8 +163,10 @@ class Room:
 
 if __name__ == "__main__":
     m = Model()
-    #r = Room(1, 'Room #1')
+    #r = Room(**{'id':1, 'name':'Room #1'})
     #m.insert_room(r)
+    #s = Student(**{'id':1,'name':'aaa','room':1,'birthday':'2004-01-07T00:00:00.000000','sex': 'M'})
+    #m.insert_student(s)
 
     def ddd():
         import sys
