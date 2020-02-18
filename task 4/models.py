@@ -53,7 +53,7 @@ class Model:
         self.connection.commit()
 
 
-    def select_rooms_with_count_students(self) -> typing.Iterable[(str, int)]:
+    def select_rooms_with_count_students(self) -> typing.Iterable[tuple]:
         my_cursor = self.connection.cursor()
         sql = "SELECT R.name, count(S.id) as students_in_room \
                 FROM Students as S \
@@ -64,7 +64,7 @@ class Model:
         my_cursor.execute(sql)
         return my_cursor.fetchall()
     
-    def select_rooms_with_smalles_date_arg(self) -> typing.Iterable[(str, int)]:
+    def select_rooms_with_smalles_date_arg(self) -> typing.Iterable[(str)]:
         my_cursor = self.connection.cursor()
         sql = "SELECT R.name as students_in_room \
             FROM Students as S \
@@ -74,6 +74,8 @@ class Model:
         
         my_cursor.execute(sql)
         return my_cursor.fetchall()
+
+    
 
     def __del__(self):
         self.connection.close()
