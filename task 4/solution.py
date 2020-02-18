@@ -11,8 +11,6 @@ class Model:
                                 host =      kwargs.get('host') or '127.0.0.1',
                                 database =  kwargs.get('database') or 'leverx_task4_db',
                                 auth_plugin=kwargs.get('auth_plugin') or 'mysql_native_password')
-        
-    
     
     def insert_student(self, student):
         my_cursor = self.connection.cursor()
@@ -29,11 +27,23 @@ class Model:
         self.connection.commit()
 
     # TODO
-    def insert_room_with_students(self, room):
+    def insert_students_from_room(self, room):
+        my_cursor = self.connection.cursor()
+        sql = "INSERT INTO Students (id, name, sex, birthday, room_id) VALUES (%s, %s, %s, %s, %s)"
+        val = [
+            (s.id, s.name, s.sex, s.birthday, s.room) for s in room.students
+            ]
+        my_cursor.executemany(sql, val)
+        self.connection.commit()
+
+    # TODO
+    def insert_rooms(self, rooms):
         my_cursor = self.connection.cursor()
         sql = "INSERT INTO Rooms (id, name) VALUES (%s, %s)"
-        val = (room.id, room.name)
-        my_cursor.execute(sql, val)
+        val = [
+            (room.id, room.name) for room in rooms
+            ]
+        my_cursor.executemany(sql, val)
         self.connection.commit()
 
     def __del__(self):
@@ -47,6 +57,7 @@ class Controller:
         if self.check_file_not_exists(students_path) and self.check_file_not_exists(rooms_path):
             exit()
 
+        self._model = Model()
         self.students_path = students_path
         self.rooms_path = rooms_path
         self.rooms = {}
@@ -75,8 +86,12 @@ class Controller:
                 for i in r.to_xml():
                     outfile.write(i)
 
-    def export_to_db(self, ):
-        pass
+    def export_to_db(self):
+        for room in self.rooms.values():
+            self._model.insert_room(room)
+
+        #for room in self.rooms.values():
+        #    self._model.insert_room_with_students(room)
 
     @staticmethod
     def my_jsonEncoder(object):
@@ -162,24 +177,25 @@ class Room:
 
 
 if __name__ == "__main__":
-    m = Model()
+    #m = Model()
     #r = Room(**{'id':1, 'name':'Room #1'})
     #m.insert_room(r)
     #s = Student(**{'id':1,'name':'aaa','room':1,'birthday':'2004-01-07T00:00:00.000000','sex': 'M'})
     #m.insert_student(s)
+    
+    import sys
 
-    def ddd():
-        import sys
+    if len(sys.argv) < 3:
+        print('give 3 arguments - path to students.json, path to rooms.json, output_path path (<name>.json,xml)')
+        exit()
 
-        if len(sys.argv) < 3:
-            print('give 3 arguments - path to students.json, path to rooms.json, output_path path (<name>.json,xml)')
-            exit()
+    controll = Controller(students_path = sys.argv[1], rooms_path = sys.argv[2])
+    controll.add_rooms_from_json()
 
-        controll = Controller(students_path = sys.argv[1], rooms_path = sys.argv[2])
-        controll.add_rooms_from_json()
+    controll.export_to_db()
 
-        if sys.argv[3][-3:] == 'xml':
-            controll.export_xml(output_path = sys.argv[3])
-        else:
-            controll.export_json(output_path = sys.argv[3])
+    if sys.argv[3][-3:] == 'xml':
+        controll.export_xml(output_path = sys.argv[3])
+    else:
+        controll.export_json(output_path = sys.argv[3])
         
