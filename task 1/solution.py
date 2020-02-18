@@ -1,10 +1,13 @@
 #!/usr/bin/python3.6
 
 import json
+import typing
+
+from classes import Student, Room
 
 class Controller:
 
-    def __init__(self, students_path, rooms_path):
+    def __init__(self, students_path : str, rooms_path : str):
         
         # chech files existens
         if self.check_file_not_exists(students_path) and self.check_file_not_exists(rooms_path):
@@ -15,7 +18,7 @@ class Controller:
         self.rooms = {}
 
     # add students to rooms
-    def concatinate_students_to_rooms_from_json(self):
+    def concatinate_students_to_rooms_from_json(self) -> None:
         
         # add rooms
         for room in self.import_rooms_from_json():
@@ -25,22 +28,22 @@ class Controller:
         for student in self.import_students_from_json():
             self.rooms[student.room].addStudent(student)
     
-    def import_rooms_from_json(self):
+    def import_rooms_from_json(self) -> typing.Iterable[Room]:
         with open(self.rooms_path, 'r') as rooms_file: 
             for room in json.load(rooms_file):
                 yield Room(**room)
 
-    def import_students_from_json(self):
+    def import_students_from_json(self) -> typing.Iterable[Student]:
         with open(self.students_path, 'r') as students_file:
             for student in json.load(students_file):
                 yield Student(**student)
 
-    def export_json(self, output_path = 'solution.json'):
+    def export_json(self, output_path : str):
         
         with open(output_path, 'w') as outfile:
             json.dump(list(self.rooms.values()), outfile, indent=2, default=self.my_jsonEncoder)
     
-    def export_xml(self, output_path = 'solution.xml'):
+    def export_xml(self, output_path : str):
         with open(output_path, 'w') as outfile:
             for r in self.rooms.values():
                 # generator of students in rooms write
@@ -52,71 +55,13 @@ class Controller:
         return object.to_json()
 
     # check files existense
-    def check_file_not_exists(self, path):
+    def check_file_not_exists(self, path : str) -> bool:
         try:
             open(path, "r")
             return False
         except FileNotFoundError:
             print("File " + path + " not exist")
             return True
-
-class Student:
-    
-    def __init__(self, **kwargs):
-        self._id = kwargs['id']
-        self._name = kwargs['name']
-        self._room = kwargs['room']
-
-    @property
-    def id(self):
-        return self._id
-
-    @property
-    def name(self):
-        return self._name
-
-    @property
-    def room(self):
-        return self._room
-
-    def to_json(self):
-        return {'id': self._id, 'name':self._name}
-    
-    def to_xml(self):
-        return '\t\t<student id=\"{s_id}\"> {s_name} </student>\n'.format(s_id = self.id ,s_name = self.name)
-
-class Room:
-    
-    def __init__(self, **kwargs):
-        self._id = kwargs['id']
-        self._name = kwargs['name']
-        self._students = []
-
-    @property
-    def id(self):
-        return self._id
-
-    @property
-    def name(self):
-        return self._name
-
-    @property
-    def students(self):
-        return self._students
-
-    def addStudent(self, student):
-        self._students.append(student)
-
-    def to_json(self):
-        return {'id': self._id, 'name':self._name, 'students': [s.to_json() for s in self._students]}
-
-    def to_xml(self):
-        yield '<room id=\"{r_id}\"> \n<name>{r_name}</name> \n\t<students>\n'.format(r_id = self.id, r_name = self.name)
-        for s in self.students:
-            yield s.to_xml()
-        yield '\t</students> \n</room>\n'
-
-
 
 if __name__ == "__main__":
 
