@@ -66,7 +66,7 @@ class Model:
     
     def select_rooms_with_smalles_date_arg(self) -> typing.Iterable[(str)]:
         my_cursor = self.connection.cursor()
-        sql = "SELECT R.name as students_in_room \
+        sql = "SELECT R.name \
             FROM Students as S \
                 INNER JOIN Rooms as R ON S.room_id = R.id \
             GROUP BY R.id \
@@ -78,12 +78,30 @@ class Model:
 
     def select_rooms_with_largest_date_differense(self) -> typing.Iterable[str]:
         my_cursor = self.connection.cursor()
-        sql = "SELECT R.name as students_in_room \
+        sql = "SELECT R.name \
             FROM Students as S \
                 INNER JOIN Rooms as R ON S.room_id = R.id \
             GROUP BY R.id \
             ORDER BY (MAX(S.birthday)-MIN(S.birthday)) ASC \
             LIMIT 5"
+        
+        my_cursor.execute(sql)
+        return my_cursor.fetchall()
+
+    def select_rooms_there_living_with_different_sex(self) -> typing.Iterable[str]:
+        my_cursor = self.connection.cursor()
+        sql = "SELECT R.name \
+            FROM Rooms as R \
+            WHERE (\
+                    SELECT count(*) \
+                    FROM Students as S1 \
+                    WHERE S1.sex = 'M' and S1.room_id = R.id \
+                    Group BY S1.room_id) \
+                         < \
+                    (SELECT count(*) \
+                    FROM Students as S2 \
+                    WHERE S2.room_id = R.id \
+                    Group BY S2.room_id)"
         
         my_cursor.execute(sql)
         return my_cursor.fetchall()

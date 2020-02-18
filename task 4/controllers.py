@@ -96,6 +96,7 @@ class DBController(Controller):
         print('----------------------')
         print(self._model.select_rooms_with_largest_date_differense())
         print('----------------------')
+        print(self._model.select_rooms_there_living_with_different_sex())
 
         
         
