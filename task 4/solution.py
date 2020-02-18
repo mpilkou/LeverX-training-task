@@ -61,17 +61,25 @@ class Controller:
         self.rooms = {}
 
     # add students to rooms
-    def add_rooms_from_json(self):
-
+    def concatinate_students_to_rooms_from_json(self):
+        
         # add rooms
-        with open(self.rooms_path, 'r') as myfile: 
-            for room in json.load(myfile):
-                self.rooms[room['id']] = Room(**room)
+        for room in self.import_rooms_from_json():
+            self.rooms[room['id']] = Room(**room)
         
         # add students to rooms
-        with open(self.students_path, 'r') as myfile:
-            for student in json.load(myfile):
-                self.rooms[student['room']].addStudent(Student(**student))
+        for student in self.import_students_from_json():
+            self.rooms[student['room']].addStudent(Student(**student))
+    
+    def import_rooms_from_json(self):
+        with open(self.rooms_path, 'r') as rooms_file: 
+            for room in json.load(rooms_file):
+                yield Room(**room)
+
+    def import_students_from_json(self):
+        with open(self.students_path, 'r') as students_file:
+            for student in json.load(students_file):
+                yield Student(**student)
 
     def export_json(self, output_path = 'solution.json'):
         with open(output_path, 'w') as outfile:
@@ -187,7 +195,7 @@ if __name__ == "__main__":
         exit()
 
     controll = Controller(students_path = sys.argv[1], rooms_path = sys.argv[2])
-    controll.add_rooms_from_json()
+    controll.concatinate_students_to_rooms_from_json()
 
     controll.export_to_db()
 
