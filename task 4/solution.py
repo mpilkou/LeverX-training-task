@@ -25,8 +25,7 @@ class Model:
         val = (room.id, room.name)
         my_cursor.execute(sql, val)
         self.connection.commit()
-
-    # TODO
+    
     def insert_students_from_room(self, room):
         my_cursor = self.connection.cursor()
         sql = "INSERT INTO Students (id, name, sex, birthday, room_id) VALUES (%s, %s, %s, %s, %s)"
@@ -36,7 +35,6 @@ class Model:
         my_cursor.executemany(sql, val)
         self.connection.commit()
 
-    # TODO
     def insert_rooms(self, rooms):
         my_cursor = self.connection.cursor()
         sql = "INSERT INTO Rooms (id, name) VALUES (%s, %s)"
@@ -87,11 +85,10 @@ class Controller:
                     outfile.write(i)
 
     def export_to_db(self):
-        for room in self.rooms.values():
-            self._model.insert_room(room)
+        self._model.insert_rooms(self.rooms.values())
 
-        #for room in self.rooms.values():
-        #    self._model.insert_room_with_students(room)
+        for room in self.rooms.values():
+            self._model.insert_students_from_room(room)
 
     @staticmethod
     def my_jsonEncoder(object):
