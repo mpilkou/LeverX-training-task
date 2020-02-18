@@ -92,5 +92,5 @@ class DBController(Controller):
     def show_all_selects(self):
         self._model.select_rooms_with_count_students()
 
-        #self._model.select_rooms_with_smalles_date_arg()
+        print(self._model.select_rooms_with_smalles_date_arg())
         

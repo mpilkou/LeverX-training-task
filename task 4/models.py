@@ -64,6 +64,16 @@ class Model:
         my_cursor.execute(sql)
         return my_cursor.fetchall()
     
+    def select_rooms_with_smalles_date_arg(self) -> typing.Iterable[(str, int)]:
+        my_cursor = self.connection.cursor()
+        sql = "SELECT R.name as students_in_room \
+            FROM Students as S \
+                INNER JOIN Rooms as R ON S.room_id = R.id \
+            GROUP BY R.id \
+            ORDER BY avg(S.birthday) ASC LIMIT 5"
+        
+        my_cursor.execute(sql)
+        return my_cursor.fetchall()
 
     def __del__(self):
         self.connection.close()
