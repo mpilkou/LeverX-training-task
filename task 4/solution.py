@@ -55,6 +55,8 @@ class Model:
         my_cursor.executemany(sql, val)
         self.connection.commit()
 
+    
+
     def __del__(self):
         self.connection.close()
 
@@ -111,7 +113,7 @@ class Controller:
                 for i in r.to_xml():
                     outfile.write(i)
 
-    def export_to_db(self) -> None:
+    def import_to_db(self) -> None:
         self._model.insert_rooms(self.import_rooms_from_json())
         self._model.insert_students(self.import_students_from_json())
 
@@ -149,6 +151,8 @@ if __name__ == "__main__":
         controll.export_json(output_path = sys.argv[3])
 
 
-    # db export
-    controll.export_to_db()
+    # db import
+    #controll.import_to_db()
+
+    
         
