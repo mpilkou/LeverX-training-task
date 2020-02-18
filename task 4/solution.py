@@ -46,6 +46,15 @@ class Model:
         my_cursor.executemany(sql, val)
         self.connection.commit()
 
+    def insert_students(self, students: typing.Iterable[Student]) -> None:
+        my_cursor = self.connection.cursor()
+        sql = "INSERT INTO Students (id, name, sex, birthday, room_id) VALUES (%s, %s, %s, %s, %s)"
+        val = [
+            (s.id, s.name, s.sex, s.birthday, s.room) for s in students
+            ]
+        my_cursor.executemany(sql, val)
+        self.connection.commit()
+
     def __del__(self):
         self.connection.close()
 
@@ -71,7 +80,7 @@ class Controller:
         
         # add students to rooms
         for student in self.import_students_from_json():
-            self.rooms[student].addStudent(student)
+            self.rooms[student.room].addStudent(student)
     
     def import_rooms_from_json(self) -> None:
         with open(self.rooms_path, 'r') as rooms_file: 
@@ -103,10 +112,8 @@ class Controller:
                     outfile.write(i)
 
     def export_to_db(self) -> None:
-        self._model.insert_rooms(self.rooms.values())
-
-        for room in self.rooms.values():
-            self._model.insert_students_from_room(room)
+        self._model.insert_rooms(self.import_rooms_from_json())
+        self._model.insert_students(self.import_students_from_json())
 
     @staticmethod
     def my_jsonEncoder(obj: object):
@@ -123,25 +130,25 @@ class Controller:
 
 
 if __name__ == "__main__":
-    #m = Model()
-    #r = Room(**{'id':1, 'name':'Room #1'})
-    #m.insert_room(r)
-    #s = Student(**{'id':1,'name':'aaa','room':1,'birthday':'2004-01-07T00:00:00.000000','sex': 'M'})
-    #m.insert_student(s)
-    
+    # check input
     import sys
 
     if len(sys.argv) < 3:
         print('give 3 arguments - path to students.json, path to rooms.json, output_path path (<name>.json,xml)')
         exit()
 
+    # init controller
     controll = Controller(students_path = sys.argv[1], rooms_path = sys.argv[2])
-    controll.concatinate_students_to_rooms_from_json()
 
-    controll.export_to_db()
+    # students to rooms & file export
+    controll.concatinate_students_to_rooms_from_json()
 
     if sys.argv[3][-3:] == 'xml':
         controll.export_xml(output_path = sys.argv[3])
     else:
         controll.export_json(output_path = sys.argv[3])
+
+
+    # db export
+    controll.export_to_db()
         
