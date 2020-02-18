@@ -35,12 +35,9 @@ class Controller:
     def export_xml(self, output_path = 'solution.xml'):
         with open(output_path, 'w') as outfile:
             for r in self.rooms.values():
-                outfile.write('<room id=\"{r_id}\"> \n<name>{r_name}</name> \n\t<students>\n'.format(r_id = r.id, r_name = r.name))
-                
-                for s in r.students:
-                    outfile.write('\t\t<student id=\"{s_id}\"> {s_name} </student>\n'.format(s_id = s.id ,s_name = s.name))
-                
-                outfile.write('\t</students> \n</room>\n')
+                # generator of students in rooms write
+                for i in r.to_xml():
+                    outfile.write(i)
 
     @staticmethod
     def my_jsonEncoder(object):
@@ -76,7 +73,9 @@ class Student:
 
     def to_json(self):
         return {'id': self._id, 'name':self._name}
-
+    
+    def to_xml(self):
+        return '\t\t<student id=\"{s_id}\"> {s_name} </student>\n'.format(s_id = self.id ,s_name = self.name)
 
 class Room:
     
@@ -102,6 +101,12 @@ class Room:
 
     def to_json(self):
         return {'id': self._id, 'name':self._name, 'students': [s.to_json() for s in self._students]}
+
+    def to_xml(self):
+        yield '<room id=\"{r_id}\"> \n<name>{r_name}</name> \n\t<students>\n'.format(r_id = self.id, r_name = self.name)
+        for s in self.students:
+            yield s.to_xml()
+        yield '\t</students> \n</room>\n'
 
 
 
