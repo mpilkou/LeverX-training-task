@@ -65,11 +65,11 @@ class Controller:
         
         # add rooms
         for room in self.import_rooms_from_json():
-            self.rooms[room['id']] = Room(**room)
+            self.rooms[room.id] = room
         
         # add students to rooms
         for student in self.import_students_from_json():
-            self.rooms[student['room']].addStudent(Student(**student))
+            self.rooms[student].addStudent(student)
     
     def import_rooms_from_json(self):
         with open(self.rooms_path, 'r') as rooms_file: 
