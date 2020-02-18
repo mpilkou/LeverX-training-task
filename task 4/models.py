@@ -53,7 +53,7 @@ class Model:
         self.connection.commit()
 
 
-    def select_rooms_with_count_students(self) -> typing.Iterable[tuple]:
+    def select_rooms_with_count_students(self) -> typing.Iterable[typing.Tuple[str,int]]:
         my_cursor = self.connection.cursor()
         sql = "SELECT R.name, count(S.id) as students_in_room \
                 FROM Students as S \
@@ -70,11 +70,23 @@ class Model:
             FROM Students as S \
                 INNER JOIN Rooms as R ON S.room_id = R.id \
             GROUP BY R.id \
-            ORDER BY avg(S.birthday) ASC LIMIT 5"
+            ORDER BY avg(S.birthday) ASC \
+            LIMIT 5"
         
         my_cursor.execute(sql)
         return my_cursor.fetchall()
 
+    def select_rooms_with_largest_date_differense(self) -> typing.Iterable[str]:
+        my_cursor = self.connection.cursor()
+        sql = "SELECT R.name as students_in_room \
+            FROM Students as S \
+                INNER JOIN Rooms as R ON S.room_id = R.id \
+            GROUP BY R.id \
+            ORDER BY (MAX(S.birthday)-MIN(S.birthday)) ASC \
+            LIMIT 5"
+        
+        my_cursor.execute(sql)
+        return my_cursor.fetchall()
     
 
     def __del__(self):

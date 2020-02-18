@@ -94,6 +94,8 @@ class DBController(Controller):
         print('----------------------')
         print(self._model.select_rooms_with_smalles_date_arg())
         print('----------------------')
+        print(self._model.select_rooms_with_largest_date_differense())
+        print('----------------------')
 
         
         
