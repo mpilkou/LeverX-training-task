@@ -98,6 +98,8 @@ class Student:
         self._id = kwargs['id']
         self._name = kwargs['name']
         self._room = kwargs['room']
+        self._birthday = kwargs['birthday']
+        self._sex = kwargs['sex']
 
     @property
     def id(self):
@@ -110,6 +112,15 @@ class Student:
     @property
     def room(self):
         return self._room
+
+    @property
+    def birthday(self):
+        return self._birthday
+
+    @property
+    def sex(self):
+        return self._sex
+
 
     def to_json(self):
         return {'id': self._id, 'name':self._name}
