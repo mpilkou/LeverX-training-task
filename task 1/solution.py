@@ -20,12 +20,12 @@ class Controller:
         # add rooms
         with open(self.rooms_path, 'r') as myfile: 
             for room in json.load(myfile):
-                self.rooms[room['id']] = Room(room['id'],room['name'])
+                self.rooms[room['id']] = Room(**room)
         
         # add students to rooms
         with open(self.students_path, 'r') as myfile:
             for student in json.load(myfile):
-                self.rooms[student['room']].addStudent(Student(student['id'],student['name'],student['room']))
+                self.rooms[student['room']].addStudent(Student(**student))
 
     def export_json(self, output_path = 'solution.json'):
         
@@ -54,10 +54,10 @@ class Controller:
 
 class Student:
     
-    def __init__(self, id, name, room):
-        self._id = id
-        self._name = name
-        self._room = room
+    def __init__(self, **kwargs):
+        self._id = kwargs['id']
+        self._name = kwargs['name']
+        self._room = kwargs['room']
 
     @property
     def id(self):
@@ -79,9 +79,9 @@ class Student:
 
 class Room:
     
-    def __init__(self, id, name):
-        self._id = id
-        self._name = name
+    def __init__(self, **kwargs):
+        self._id = kwargs['id']
+        self._name = kwargs['name']
         self._students = []
 
     @property
