@@ -88,3 +88,9 @@ class DBController(Controller):
     def import_to_db(self) -> None:
         self._model.insert_rooms(self.import_rooms_from_json())
         self._model.insert_students(self.import_students_from_json())
+
+    def show_all_selects(self):
+        self._model.select_rooms_with_count_students()
+
+        #self._model.select_rooms_with_smalles_date_arg()
+        

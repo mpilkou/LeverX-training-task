@@ -52,6 +52,17 @@ class Model:
         my_cursor.executemany(sql, val)
         self.connection.commit()
 
+
+    def select_rooms_with_count_students(self) -> typing.Iterable[(str, int)]:
+        my_cursor = self.connection.cursor()
+        sql = "SELECT R.name, count(S.id) as students_in_room \
+                FROM Students as S \
+                    INNER JOIN Rooms as R \
+                        ON S.room_id = R.id \
+                GROUP BY R.id"
+        
+        my_cursor.execute(sql)
+        return my_cursor.fetchall()
     
 
     def __del__(self):
