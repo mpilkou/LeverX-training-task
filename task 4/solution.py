@@ -30,7 +30,7 @@ if __name__ == "__main__":
 
     db_controll = DBController(students_path = sys.argv[1], rooms_path = sys.argv[2])
     # db import
-    #db_controll.import_to_db()
+    db_controll.import_to_db()
 
     # selects
     db_controll.show_all_selects()
