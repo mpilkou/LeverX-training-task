@@ -13,6 +13,30 @@ class Model:
                                 auth_plugin=kwargs.get('auth_plugin') or 'mysql_native_password')
         
     
+    # TODO
+    def insert_student(self, student):
+        my_cursor = self.connection.cursor()
+        sql = "INSERT INTO Students (id, name) VALUES (%s, %s)"
+        
+        val = (student.id, student.name)
+        my_cursor.execute(sql, val)
+        self.connection.commit()
+
+    def insert_room(self, room):
+        my_cursor = self.connection.cursor()
+        sql = "INSERT INTO Rooms (id, name) VALUES (%s, %s)"
+        val = (room.id, room.name)
+        my_cursor.execute(sql, val)
+        self.connection.commit()
+
+    # TODO
+    def insert_room_with_students(self, room):
+        my_cursor = self.connection.cursor()
+        sql = "INSERT INTO Rooms (id, name) VALUES (%s, %s)"
+        val = (room.id, room.name)
+        my_cursor.execute(sql, val)
+        self.connection.commit()
+
     def __del__(self):
         self.connection.close()
 
@@ -123,6 +147,8 @@ class Room:
 
 if __name__ == "__main__":
     m = Model()
+    #r = Room(1, 'Room #1')
+    #m.insert_room(r)
 
     def ddd():
         import sys
