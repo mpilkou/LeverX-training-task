@@ -51,8 +51,8 @@ class Controller:
                     outfile.write(i)
 
     @staticmethod
-    def my_jsonEncoder(object):
-        return object.to_json()
+    def my_jsonEncoder(obj: object):
+        return obj.to_json()
 
     # check files existense
     def check_file_not_exists(self, path : str) -> bool:
