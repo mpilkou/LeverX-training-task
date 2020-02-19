@@ -51,64 +51,15 @@ class Version:
         return True
 
     
-    # TODO
     def __gt__(self, other : typing.TypeVar('Version')) -> bool:
-        print(self.version)
-        print(other.version)
         for block_i, _ in enumerate(self.version):
-            
             for number_i, _ in enumerate(self.version[block_i]):
                 if self.version[block_i][number_i] < other.version[block_i][number_i]:
-                    print('---')
-                    print(self.version[block_i][number_i])
-                    print(other.version[block_i][number_i])
                     return False
                 elif self.version[block_i][number_i] > other.version[block_i][number_i]:
                     return True
 
-        return True
-
-    def old__gt__(self, other : typing.TypeVar('Version')) -> bool:
-
-        # get min from 2 versions
-        compare_len = len(self.version) if len(self.version) < len(other.version) else len(other.version)
-
-        for i in range(compare_len):
-            # get min from vetsions beetween .-.
-            compare_len_i = min([len(self.version[i]),len(other.version[i])])
-            for j in range(compare_len_i):
-                if self.version[i][j].isnumeric() and other.version[i][j].isnumeric():
-                    # [0-9] > [0-9]
-                    if self.version[i][j] > other.version[i][j]:
-                        return True
-                    elif self.version[i][j] < other.version[i][j]:
-                        return False
-                    # else: 1 == 1
-                # [0-9] > [a-]
-                elif self.version[i][j].isnumeric():
-                    return True
-
-                # [a-] > [0-9]
-                elif other.version[i][j].isnumeric():
-                    return False
-
-                # [a-] > [a-]
-                else:
-                    # P < a < b < r : ascii
-                    if self.version[i][j] > other.version[i][j]:
-                        return True
-                    elif self.version[i][j] < other.version[i][j]:
-                        return False
-                    # else: a == a
-            # 0rc < 0
-            if len(self.version[i]) < len(other.version[i]):
-                return True
-
-        # 1.0.0.1 > 1.0.0
-        if len(self.version) > len(other.version):
-            return True
-        # self == other
-        return False   
+        return True 
 
 
 def main():
@@ -123,8 +74,8 @@ def main():
     ]
 
     for version_1, version_2 in to_test:
-        #assert Version(version_1) < Version(version_2), 'le failed'
-        #assert Version(version_2) > Version(version_1), 'ge failed'
+        assert Version(version_1) < Version(version_2), 'le failed'
+        assert Version(version_2) > Version(version_1), 'ge failed'
         assert Version(version_2) != Version(version_1), 'neq failed'
 
 
