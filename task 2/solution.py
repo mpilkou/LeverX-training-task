@@ -30,28 +30,18 @@ class Version:
                 version[block_i][number_i] = 0 if number_v == '' else int(number_v)   
         
         return version
-
-    # TODO
+    
     def __eq__(self, other : typing.TypeVar('Version')) -> bool:
         if not (len(self.version) == len(other.version)):
             return False
 
         for block_i, _ in enumerate(self.version):
             for number_i, _ in enumerate(self.version[block_i]):
-                pass
-
-
-
-
-        
-
-    def old__eq__(self, other : typing.TypeVar('Version')) -> bool:
-        if len(self.version) == len(other.version):
-            for i,_ in enumerate(self.version):
-                if not (self.version[i] == other.version[i]):
+                if not( self.version[block_i][number_i] == other.version[block_i][number_i]):
                     return False
-            return True
-        return False
+        
+        return True
+
     
     # TODO
     def __gt__(self, other : typing.TypeVar('Version')) -> bool:
