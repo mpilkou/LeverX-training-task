@@ -37,9 +37,7 @@ class Version:
         return version
 
     def __eq__(self, other : typing.TypeVar('Version')) -> bool:
-        if not (len(self.version) == len(other.version)):
-            return False
-
+        
         for block_i, _ in enumerate(self.version):
             for number_i, _ in enumerate(self.version[block_i]):
                 if not( self.version[block_i][number_i] == other.version[block_i][number_i]):
