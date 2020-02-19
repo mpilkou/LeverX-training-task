@@ -13,7 +13,7 @@ class Model:
 
     def insert_rooms(self, rooms: typing.Iterable[Room]) -> None:
         my_cursor = self.connection.cursor()
-        sql = "INSERT INTO Rooms (id, name) VALUES (%s, %s)"
+        sql = "INSERT INTO Rooms(id, name) VALUES (%s, %s) ON DUPLICATE KEY UPDATE name = VALUES(name)"
         val = [
             (room.id, room.name) for room in rooms
             ]
@@ -22,7 +22,8 @@ class Model:
 
     def insert_students(self, students: typing.Iterable[Student]) -> None:
         my_cursor = self.connection.cursor()
-        sql = "INSERT INTO Students (id, name, sex, birthday, room_id) VALUES (%s, %s, %s, %s, %s)"
+        sql = "INSERT INTO Students (id, name, sex, birthday, room_id) VALUES (%s, %s, %s, %s, %s)\
+                ON DUPLICATE KEY UPDATE name = VALUES(name), sex = VALUES(sex), birthday = VALUES(birthday), room_id = VALUES(room_id)"
         val = [
             (s.id, s.name, s.sex, s.birthday, s.room) for s in students
             ]
