@@ -8,20 +8,42 @@ class Version:
     def __init__(self, version : str):
         self.version = self.pre_proces(version)
 
-    def pre_proces(self, version : str) -> str:
+    def pre_proces(self, version : str) -> typing.Iterable[typing.Iterable[int]]:
         version = version.replace('-', '')
-        version = version.replace('prealpha', '-P-')
-        version = version.replace('alpha', '-a-')
-        version = version.replace('beta', '-b-')
+        # replase full names
+        version = version.replace('prealpha', '|-4|')
+        version = version.replace('alpha', '|-3|')
+        version = version.replace('beta', '|-2|')
+        version = version.replace('rc', '|-1|')
+        # replase short
+        version = version.replace('b', '|-2|')
+        version = version.replace('a', '|-3|')
         version = version.split('.')
 
-        for block in version:
-            block = block.split('-')
+        # [1, 2, 3|-3|_, 4] of [1, 2, 3|-3|4, 5]
+        for block_i, block_v in enumerate(version):
+            version[block_i] = block_v.split('|')
+
+        # [[1], [2], [3,-3,_] , [4]]
+        for block_i, block_v in enumerate(version):
+            for number_i, number_v in enumerate(version[block_i]):
+                version[block_i][number_i] = 0 if number_v == '' else int(number_v)   
+        
         return version
 
     # TODO
     def __eq__(self, other : typing.TypeVar('Version')) -> bool:
-        pass
+        if not (len(self.version) == len(other.version)):
+            return False
+
+        for block_i, _ in enumerate(self.version):
+            for number_i, _ in enumerate(self.version[block_i]):
+                pass
+
+
+
+
+        
 
     def old__eq__(self, other : typing.TypeVar('Version')) -> bool:
         if len(self.version) == len(other.version):
