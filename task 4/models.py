@@ -4,12 +4,20 @@ from classes import Student, Room
 
 class Model:
     def __init__(self, **kwargs):
+        
+        self.create_db_and_tables()
+
         self.connection = mysql.connector.connect(
                                 user =      kwargs.get('user') or 'root', 
                                 password=   kwargs.get('root') or 'root',
                                 host =      kwargs.get('host') or '127.0.0.1',
                                 database =  kwargs.get('database') or 'leverx_task4_db',
                                 auth_plugin=kwargs.get('auth_plugin') or 'mysql_native_password')
+        
+    @staticmethod
+    def create_db_and_tables():
+        import os
+        os.system('./inits/init_script.sh')
 
     def insert_rooms(self, rooms: typing.Iterable[Room]) -> None:
         my_cursor = self.connection.cursor()
