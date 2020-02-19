@@ -5,7 +5,7 @@ from classes import Student, Room
 class Model:
     def __init__(self, **kwargs):
         
-        self.create_db_and_tables()
+        self.create_db_and_tables(kwargs.get('init_script_path_sh') or './inits/init_script.sh')
 
         self.connection = mysql.connector.connect(
                                 user =      kwargs.get('user') or 'root', 
@@ -15,9 +15,9 @@ class Model:
                                 auth_plugin=kwargs.get('auth_plugin') or 'mysql_native_password')
         
     @staticmethod
-    def create_db_and_tables():
+    def create_db_and_tables(init_script_path_sh : str) -> None:
         import os
-        os.system('./inits/init_script.sh')
+        os.system(init_script_path_sh)
 
     def insert_rooms(self, rooms: typing.Iterable[Room]) -> None:
         my_cursor = self.connection.cursor()
