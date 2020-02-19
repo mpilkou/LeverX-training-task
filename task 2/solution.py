@@ -6,17 +6,24 @@ import typing
 
 class Version:
     def __init__(self, version : str):
-        version = self.pre_proces(version)
-        self.version = version.split('.')
+        self.version = self.pre_proces(version)
 
     def pre_proces(self, version : str) -> str:
         version = version.replace('-', '')
-        version = version.replace('prealpha', 'P')
-        version = version.replace('alpha', 'a')
-        version = version.replace('beta', 'b')
+        version = version.replace('prealpha', '-P-')
+        version = version.replace('alpha', '-a-')
+        version = version.replace('beta', '-b-')
+        version = version.split('.')
+
+        for block in version:
+            block = block.split('-')
         return version
 
+    # TODO
     def __eq__(self, other : typing.TypeVar('Version')) -> bool:
+        pass
+
+    def old__eq__(self, other : typing.TypeVar('Version')) -> bool:
         if len(self.version) == len(other.version):
             for i,_ in enumerate(self.version):
                 if not (self.version[i] == other.version[i]):
@@ -24,7 +31,11 @@ class Version:
             return True
         return False
     
+    # TODO
     def __gt__(self, other : typing.TypeVar('Version')) -> bool:
+        pass
+
+    def old__gt__(self, other : typing.TypeVar('Version')) -> bool:
 
         # get min from 2 versions
         compare_len = len(self.version) if len(self.version) < len(other.version) else len(other.version)
@@ -74,8 +85,8 @@ def main():
         ('1.2.0', '1.2.42'),
         ('1.1.0-alpha', '1.2.0-alpha.1'),
         ('1.0.1b', '1.0.10-alpha.beta'),
-        ('1.0.0-rc.1', '1.0.0'),
-        ('1.0.0','1.0.00')
+        ('1.0.0-rc.1', '1.0.0')
+        #,('1.0.0','1.0.00')
     ]
 
     for version_1, version_2 in to_test:
