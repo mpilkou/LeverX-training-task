@@ -26,12 +26,17 @@ class Version:
 
         # [[1], [2], [3,-3,_] , [4]]
         for block_i, block_v in enumerate(version):
+            zeros_if_none = [0]*3
             for number_i, number_v in enumerate(version[block_i]):
-                version[block_i][number_i] = 0 if number_v == '' else int(number_v)
+                zeros_if_none[number_i] = 0 if number_v == '' else int(number_v)
+            version[block_i] = zeros_if_none
 
-        # [[1], [0], [0, -1, 0]]
-        if len(version) == 3:
-            version.append([0])
+        # [[1,0,0], [0,0,0], [0, -1, 0]]
+        zeros_if_size_less_4 = [[0]*3]*4
+        for block_i, block_v in enumerate(version):
+            zeros_if_size_less_4 [block_i] = block_v
+        
+        version = zeros_if_size_less_4
           
         # [[1], [0], [0, -1, 0], [0]]
         return version
@@ -48,14 +53,20 @@ class Version:
     
     # TODO
     def __gt__(self, other : typing.TypeVar('Version')) -> bool:
-
-        min_len_version = min([len(self.version),len(other.version)])
-
+        print(self.version)
+        print(other.version)
         for block_i, _ in enumerate(self.version):
+            
             for number_i, _ in enumerate(self.version[block_i]):
-                if not( self.version[block_i][number_i] == other.version[block_i][number_i]):
+                if self.version[block_i][number_i] < other.version[block_i][number_i]:
+                    print('---')
+                    print(self.version[block_i][number_i])
+                    print(other.version[block_i][number_i])
                     return False
-        
+                elif self.version[block_i][number_i] > other.version[block_i][number_i]:
+                    return True
+
+        return True
 
     def old__gt__(self, other : typing.TypeVar('Version')) -> bool:
 
@@ -107,8 +118,8 @@ def main():
         ('1.2.0', '1.2.42'),
         ('1.1.0-alpha', '1.2.0-alpha.1'),
         ('1.0.1b', '1.0.10-alpha.beta'),
-        ('1.0.0-rc.1', '1.0.0')
-        #,('1.0.0','1.0.00')
+        ('1.0.0-rc.1', '1.0.0'),
+        ('1.0.0','1.0.0.1')
     ]
 
     for version_1, version_2 in to_test:
