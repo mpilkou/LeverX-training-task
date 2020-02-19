@@ -1,10 +1,10 @@
-CREATE DATABASE leverx_task4_db COLLATE utf8_general_ci;
+CREATE DATABASE IF NOT EXISTS leverx_task4_db COLLATE utf8_general_ci;
 
-CREATE TABLE Rooms (
+CREATE TABLE IF NOT EXISTS leverx_task4_db.Rooms (
     id int UNSIGNED NOT NULL PRIMARY KEY,
     name varchar(50) NOT NULL
 );
-CREATE TABLE Students (
+CREATE TABLE IF NOT EXISTS leverx_task4_db.Students (
     id int UNSIGNED NOT NULL PRIMARY KEY,
     name varchar(50) NOT NULL,
     sex varchar(1) NOT NULL,
