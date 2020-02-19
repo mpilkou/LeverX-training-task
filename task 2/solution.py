@@ -27,10 +27,15 @@ class Version:
         # [[1], [2], [3,-3,_] , [4]]
         for block_i, block_v in enumerate(version):
             for number_i, number_v in enumerate(version[block_i]):
-                version[block_i][number_i] = 0 if number_v == '' else int(number_v)   
-        
+                version[block_i][number_i] = 0 if number_v == '' else int(number_v)
+
+        # [[1], [0], [0, -1, 0]]
+        if len(version) == 3:
+            version.append([0])
+          
+        # [[1], [0], [0, -1, 0], [0]]
         return version
-    
+
     def __eq__(self, other : typing.TypeVar('Version')) -> bool:
         if not (len(self.version) == len(other.version)):
             return False
@@ -45,7 +50,14 @@ class Version:
     
     # TODO
     def __gt__(self, other : typing.TypeVar('Version')) -> bool:
-        pass
+
+        min_len_version = min([len(self.version),len(other.version)])
+
+        for block_i, _ in enumerate(self.version):
+            for number_i, _ in enumerate(self.version[block_i]):
+                if not( self.version[block_i][number_i] == other.version[block_i][number_i]):
+                    return False
+        
 
     def old__gt__(self, other : typing.TypeVar('Version')) -> bool:
 
