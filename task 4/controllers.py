@@ -13,8 +13,11 @@ class Controller:
 
         self.students_path = students_path
         self.rooms_path = rooms_path
+        
+        # rooms to export (in this task)
+        self.export_data = {}
 
-
+        
     def import_rooms_from_json(self) -> None:
         with open(self.rooms_path, 'r') as rooms_file: 
             for room in json.load(rooms_file):
@@ -35,24 +38,23 @@ class Controller:
             print("File " + path + " not exist")
             return True
 
+    # add students to rooms
+    def concatinate_students_to_rooms_from_json(self) -> None:
+        
+        # add rooms
+        for room in self.import_rooms_from_json():
+            self.export_data[room.id] = room
+        
+        # add students to rooms
+        for student in self.import_students_from_json():
+            self.export_data[student.room].addStudent(student)
+
 class FilesController(Controller):
 
     def __init__(self, students_path, rooms_path):
 
         # check files existens & add students_path and rooms_path to self
         super().__init__(students_path, rooms_path)
-        self.rooms = {}
-
-    # add students to rooms
-    def concatinate_students_to_rooms_from_json(self) -> None:
-        
-        # add rooms
-        for room in self.import_rooms_from_json():
-            self.rooms[room.id] = room
-        
-        # add students to rooms
-        for student in self.import_students_from_json():
-            self.rooms[student.room].addStudent(student)
     
     def export_json(self, output_path : str) -> None:
         
@@ -60,7 +62,7 @@ class FilesController(Controller):
             output_path = 'solution.json'
 
         with open(output_path, 'w') as outfile:
-            json.dump(list(self.rooms.values()), outfile, indent=2, default=self.my_jsonEncoder)
+            json.dump(list(self.export_data.values()), outfile, indent=2, default=self.my_jsonEncoder)
     
     def export_xml(self, output_path : str) -> None:
 
@@ -68,7 +70,7 @@ class FilesController(Controller):
             output_path = 'solution.xml'
 
         with open(output_path, 'w') as outfile:
-            for r in self.rooms.values():
+            for r in self.export_data.values():
                 # generator of students in rooms write
                 for i in r.to_xml():
                     outfile.write(i)
