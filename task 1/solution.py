@@ -16,6 +16,7 @@ class Controller:
         self.students_path = students_path
         self.rooms_path = rooms_path
         self.rooms = {}
+        self.export = None
 
     # add students to rooms
     def concatinate_students_to_rooms_from_json(self) -> None:
@@ -38,22 +39,6 @@ class Controller:
             for student in json.load(students_file):
                 yield Student(**student)
 
-    def export_json(self, output_path : str):
-        
-        with open(output_path, 'w') as outfile:
-            json.dump(list(self.rooms.values()), outfile, indent=2, default=self.my_jsonEncoder)
-    
-    def export_xml(self, output_path : str):
-        with open(output_path, 'w') as outfile:
-            for r in self.rooms.values():
-                # generator of students in rooms write
-                for i in r.to_xml():
-                    outfile.write(i)
-
-    @staticmethod
-    def my_jsonEncoder(obj: object):
-        return obj.to_json()
-
     # check files existense
     def check_file_not_exists(self, path : str) -> bool:
         try:
@@ -62,6 +47,34 @@ class Controller:
         except FileNotFoundError:
             print("File " + path + " not exist")
             return True
+
+
+    def export_xml(self, output_path : str) -> None:
+        self.export.export_xml(output_path)
+
+    def export_json(self, output_path : str) -> None:
+        self.export.export_json(output_path)
+    
+
+class ExporterToFile:
+
+    def __init__(self, data : dict):
+        self.data = data
+
+    def export_json(self, output_path : str, data) -> None:
+        with open(output_path, 'w') as outfile:
+            json.dump(list(self.data.values()), outfile, indent=2, default=self.my_jsonEncoder)
+    
+    def export_xml(self, output_path : str, data) -> None:
+        with open(output_path, 'w') as outfile:
+            for r in self.data.values():
+                # generator of students in rooms write
+                for i in r.to_xml():
+                    outfile.write(i)
+
+    @staticmethod
+    def my_jsonEncoder(obj: object):
+        return obj.to_json()
 
 if __name__ == "__main__":
 
