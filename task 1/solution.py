@@ -28,6 +28,8 @@ class Controller:
         # add students to rooms
         for student in self.import_students_from_json():
             self.rooms[student.room].addStudent(student)
+
+        self.export = ExporterToFile(self.rooms)
     
     def import_rooms_from_json(self) -> typing.Iterable[Room]:
         with open(self.rooms_path, 'r') as rooms_file: 
@@ -61,11 +63,11 @@ class ExporterToFile:
     def __init__(self, data : dict):
         self.data = data
 
-    def export_json(self, output_path : str, data) -> None:
+    def export_json(self, output_path : str) -> None:
         with open(output_path, 'w') as outfile:
-            json.dump(list(self.data.values()), outfile, indent=2, default=self.my_jsonEncoder)
+            json.dump(self.data, outfile, indent=2, default=self.my_jsonEncoder)
     
-    def export_xml(self, output_path : str, data) -> None:
+    def export_xml(self, output_path : str) -> None:
         with open(output_path, 'w') as outfile:
             for r in self.data.values():
                 # generator of students in rooms write
