@@ -13,9 +13,9 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='give 3 arguments - path to students.json, path to rooms.json, output_path path (<name>.json,xml)')
 
-    parser.add_argument('students', metavar='path to students.json', type=str, help='path to students.json')
-    parser.add_argument('rooms', metavar='path to rooms.json', type=str, help='path to rooms. json')
-    parser.add_argument('output_file', metavar='output file (xml or json)', type=str, help='output file ( xml or json)')
+    parser.add_argument('students', metavar='[path to students.json]', type=str, help='path to students.json file')
+    parser.add_argument('rooms', metavar='[path to rooms.json]', type=str, help='path to rooms.json file')
+    parser.add_argument('output_file', metavar='[output file (xml or json)]', type=str, help='output file ( xml or json) file')
 
     args = parser.parse_args()
 
