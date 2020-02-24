@@ -28,9 +28,9 @@ if __name__ == "__main__":
     file_controll.concatinate_students_to_rooms_from_json()
 
     if args.output_file[3][-3:] == 'xml':
-        file_controll.export_xml(output_path = args.output_file[3][-3:])
+        file_controll.export_xml(output_path = args.output_file)
     else:
-        file_controll.export_json(output_path = args.output_file[3][-3:])
+        file_controll.export_json(output_path = args.output_file)
 
 
     db_controll = DBController(students_path = args.students, rooms_path = args.rooms)
