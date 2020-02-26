@@ -1,10 +1,11 @@
 from threading import Thread, Lock
 from concurrent.futures import ThreadPoolExecutor
+import typing
 
 
 a = 0
 
-def function1(arg, lock):
+def function1(arg : int, lock : typing.TypeVar('Lock')) -> int:
     tmp = 0
 
     for _ in range(arg):
@@ -15,13 +16,13 @@ def function1(arg, lock):
         a += tmp
 
 
-def function2(arg):
+def function2(arg : int) -> int:
     a = 0
     for _ in range(arg):
         a += 1
     return a
 
-def main():
+def main() -> None:
     
     # using previos solution
     threads = []
@@ -33,7 +34,7 @@ def main():
 
     [t.join() for t in threads]
     print("----------------------", a)  # ???
-    
+
 
     # using thread pool
     with ThreadPoolExecutor(max_workers=5) as executor:
