@@ -4,24 +4,18 @@ from django.db import models
 # Create your models here.
 # base.User
 # AbstractUser
-#user = models.OneToOneField(User, on_delete=models.CASCADE)
-class Teacher(AbstractUser):
+class Teacher(models.Model):
 
-    class Meta:
-        permissions = [
-            ("add_course", "add course"),
-            ("add_students", "add students"),
-            ("add_teachers", "add teachers"),
-            ("teacher", "teacher permisions"),
-        ]    
+    user = models.OneToOneField(User, on_delete = models.CASCADE)
 
-class Student(AbstractUser):
+class Student(models.Model):
 
-    class Meta:
-        permissions = [
-            ("add_homework", "add homework"),
-            ("student", "student permisions"),
-        ]
+    user = models.OneToOneField(User, on_delete = models.CASCADE)
+
+    #class Meta:
+    #    permissions = [
+    #        ("student", "student permisions"),
+    #    ]
 
 class Course(models.Model):
     name = models.CharField(max_length=30, unique=True)
