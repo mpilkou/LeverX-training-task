@@ -2,15 +2,12 @@
 
 import json
 import typing
+import argparse
 from classes import Student, Room
 from controllers import FilesController, DBController
 from models import Model
 
-
-if __name__ == "__main__":
-    # check input
-    import argparse
-
+def get_input_arguments():
     parser = argparse.ArgumentParser(description='give 3 arguments - path to students.json, path to rooms.json, output_path path (<name>.json,xml)')
 
     parser.add_argument('students', metavar='[path to students.json]', type=str, help='path to students.json file')
@@ -19,7 +16,12 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    return args
 
+
+if __name__ == "__main__":
+    
+    args = get_input_arguments()
 
     # init controller
     file_controll = FilesController(students_path = args.students, rooms_path = args.rooms)
