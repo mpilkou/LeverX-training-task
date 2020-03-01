@@ -30,8 +30,7 @@ def api_logout(request):
 @api_view(['POST'])
 def api_login(request):
     user = User.objects.get(username=request.data.get('username'))
-    print(user)
-    print(user.password)
+
     login(request, user)
 
     a = 'None'
@@ -39,21 +38,12 @@ def api_login(request):
         a = { 'user':'user'}
     else:
         a = user
-        
-    #from django.db import models
 
-    a = models.Teacher.objects.all()
-    print(list(a))
+    #a = models.Teacher.objects.all()
+    
     res = Response({'a':'a'})
     #res.delete_cookie('csrftoken')
     return res
-
-    # get_or_create
-    #models.Teacher.objects.create_user('test', 'test@test.com', 'test')
-    #tea = models.Teacher()
-    #tea.save()
-    #return redirect('post_detail')
-    #return {'aaa':'aaaa'}
 
 
 @api_view(['POST'])
