@@ -85,20 +85,20 @@ class DBController(Controller):
         # check files existens & add students_path and rooms_path to self
         super().__init__(students_path, rooms_path)
 
-        self._model = Model()
+        self._Model_db = Model()
 
     def import_to_db(self):
-        self._model.insert_rooms(self.import_rooms_from_json())
-        self._model.insert_students(self.import_students_from_json())
+        self._Model_db.insert_rooms(self.import_rooms_from_json())
+        self._Model_db.insert_students(self.import_students_from_json())
 
     def show_all_selects(self):
-        print(self._model.select_rooms_with_count_students())
+        print(self._Model_db.select_rooms_with_count_students())
         print('----------------------')
-        print(self._model.select_rooms_with_smalles_date_arg())
+        print(self._Model_db.select_rooms_with_smalles_date_arg())
         print('----------------------')
-        print(self._model.select_rooms_with_largest_date_differense())
+        print(self._Model_db.select_rooms_with_largest_date_differense())
         print('----------------------')
-        print(self._model.select_rooms_there_living_with_different_sex())
+        print(self._Model_db.select_rooms_there_living_with_different_sex())
 
         
         
