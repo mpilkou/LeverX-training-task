@@ -55,7 +55,7 @@ class Room:
     def students(self):
         return self._students
 
-    def addStudent(self, student) -> None:
+    def addStudent(self, student):
         self._students.append(student)
 
     def to_json(self) -> dict:

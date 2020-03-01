@@ -18,12 +18,12 @@ class Controller:
         self.export_data = {}
 
         
-    def import_rooms_from_json(self) -> None:
+    def import_rooms_from_json(self):
         with open(self.rooms_path, 'r') as rooms_file: 
             for room in json.load(rooms_file):
                 yield Room(**room)
                 
-    def import_students_from_json(self) -> None:
+    def import_students_from_json(self):
         with open(self.students_path, 'r') as students_file:
             for student in json.load(students_file):
                 yield Student(**student)
@@ -39,7 +39,7 @@ class Controller:
             return True
 
     # add students to rooms
-    def concatinate_students_to_rooms_from_json(self) -> None:
+    def concatinate_students_to_rooms_from_json(self):
         
         # add rooms
         for room in self.import_rooms_from_json():
@@ -56,7 +56,7 @@ class FilesController(Controller):
         # check files existens & add students_path and rooms_path to self
         super().__init__(students_path, rooms_path)
     
-    def export_json(self, output_path : str) -> None:
+    def export_json(self, output_path : str):
         
         if not output_path:
             output_path = 'solution.json'
@@ -64,7 +64,7 @@ class FilesController(Controller):
         with open(output_path, 'w') as outfile:
             json.dump(list(self.export_data.values()), outfile, indent=2, default=self.my_jsonEncoder)
     
-    def export_xml(self, output_path : str) -> None:
+    def export_xml(self, output_path : str):
 
         if not output_path:
             output_path = 'solution.xml'
@@ -87,7 +87,7 @@ class DBController(Controller):
 
         self._model = Model()
 
-    def import_to_db(self) -> None:
+    def import_to_db(self):
         self._model.insert_rooms(self.import_rooms_from_json())
         self._model.insert_students(self.import_students_from_json())
 

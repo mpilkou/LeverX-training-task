@@ -15,11 +15,11 @@ class Model:
                                 auth_plugin=kwargs.get('auth_plugin') or 'mysql_native_password')
         
     @staticmethod
-    def create_db_and_tables(init_script_path_sh : str) -> None:
+    def create_db_and_tables(init_script_path_sh : str):
         import os
         os.system(init_script_path_sh)
 
-    def insert_rooms(self, rooms: typing.Iterable[Room]) -> None:
+    def insert_rooms(self, rooms: typing.Iterable[Room]):
         my_cursor = self.connection.cursor()
         sql = "INSERT INTO Rooms(id, name) VALUES (%s, %s) ON DUPLICATE KEY UPDATE name = VALUES(name)"
         val = [
@@ -28,7 +28,7 @@ class Model:
         my_cursor.executemany(sql, val)
         self.connection.commit()
 
-    def insert_students(self, students: typing.Iterable[Student]) -> None:
+    def insert_students(self, students: typing.Iterable[Student]):
         my_cursor = self.connection.cursor()
         sql = "INSERT INTO Students (id, name, sex, birthday, room_id) VALUES (%s, %s, %s, %s, %s)\
                 ON DUPLICATE KEY UPDATE name = VALUES(name), sex = VALUES(sex), birthday = VALUES(birthday), room_id = VALUES(room_id)"
