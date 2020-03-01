@@ -24,20 +24,20 @@ if __name__ == "__main__":
     args = get_input_arguments()
 
     # init controller
-    file_controll = FilesController(students_path = args.students, rooms_path = args.rooms)
+    File_controll = FilesController(students_path = args.students, rooms_path = args.rooms)
 
     # students to rooms & file export
-    file_controll.concatinate_students_to_rooms_from_json()
+    File_controll.concatinate_students_to_rooms_from_json()
 
     if args.output_file[3][-3:] == 'xml':
-        file_controll.export_xml(output_path = args.output_file)
+        File_controll.export_xml(output_path = args.output_file)
     else:
-        file_controll.export_json(output_path = args.output_file)
+        File_controll.export_json(output_path = args.output_file)
 
 
-    db_controll = DBController(students_path = args.students, rooms_path = args.rooms)
+    DB_controll = DBController(students_path = args.students, rooms_path = args.rooms)
     # db import
-    db_controll.import_to_db()
+    DB_controll.import_to_db()
 
     # selects
-    db_controll.show_all_selects()
+    DB_controll.show_all_selects()
