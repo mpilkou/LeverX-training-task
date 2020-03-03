@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
+from django.core.exceptions import ObjectDoesNotExist
 
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -31,18 +32,37 @@ def api_logout(request):
 def api_login(request):
     user = User.objects.get(username=request.data.get('username'))
 
-    login(request, user)
-
-    a = 'None'
     if user is None:
-        a = { 'user':'user'}
-    else:
-        a = user
+        return Response({'message':'user not exists'})
 
-    #a = models.Teacher.objects.all()
+    if not request.data.get('password') == user.password:
+        return Response({'message':'incorrect password'})
+
+    cookie = None
+
+    if request.data.get('is_teacher'):
+        try:
+            user.teacher
+        except ObjectDoesNotExist:
+            return Response({'message':'incorrect role'})
+
+        cookie = True
+    elif not request.data.get('is_teacher'):
+        try:
+            user.student
+        except ObjectDoesNotExist:
+            return Response({'message':'incorrect role'})
+
+        cookie = False
+    else:
+        return Response({'message':'role not used'})    
     
-    res = Response({'a':'a'})
-    #res.delete_cookie('csrftoken')
+    if cookie == None:
+        return Response({'message':'cookie error'})
+
+    login(request, user)
+    res = Response({'message':'sucsess'})
+    res.set_cookie('is_teacher', cookie)
     return res
 
 
