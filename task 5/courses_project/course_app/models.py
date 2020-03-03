@@ -8,14 +8,14 @@ class Teacher(models.Model):
 
     user = models.OneToOneField(User, on_delete = models.CASCADE)
 
+    class Meta:
+        permissions = [
+            ("teacher", "teacher permisions"),
+        ]
+
 class Student(models.Model):
 
     user = models.OneToOneField(User, on_delete = models.CASCADE)
-
-    #class Meta:
-    #    permissions = [
-    #        ("student", "student permisions"),
-    #    ]
 
 class Course(models.Model):
     name = models.CharField(max_length=30, unique=True)
