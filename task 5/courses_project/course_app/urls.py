@@ -9,6 +9,7 @@ urlpatterns = [
 
     # course
     path('course', views.course),
+    #path('course/<int:course_id>', views.course),
 
     path('test', views.test),
 

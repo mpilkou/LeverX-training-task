@@ -110,7 +110,9 @@ def course(request):
     elif request.method == 'POST':        
         return controller.create_courses(request)
     elif request.method == 'PUT':        
-        return controller.create_courses(request)
+        return controller.update_courses(request)
+    elif request.method == 'DELETE':        
+        return controller.update_courses(request)
     else:
         return Response({'error':'not found'})
 
