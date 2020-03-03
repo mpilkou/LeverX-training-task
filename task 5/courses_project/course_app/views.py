@@ -1,20 +1,22 @@
 from django.shortcuts import render
-from django.contrib.auth.decorators import login_required, permission_required
-from django.core.exceptions import ObjectDoesNotExist
 
 # for use
 from django.shortcuts import get_object_or_404
-from django.contrib.auth import get_user_model
 
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
+# auth
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import User, Permission
-from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth.decorators import login_required, permission_required
 
+# all models
+from django.contrib.auth.models import User, Permission
+from django.core.exceptions import ObjectDoesNotExist
 from course_app import models
-#from . import models
+
+# work on data 
+from django.core import serializers
 
 # Create your views here.
 
@@ -85,6 +87,5 @@ def api_signup(request):
     login(request, authenticate(request, username=request.data.get('username'), password=request.data.get('password')))
     res = Response({'message':'sucsess'})
     return res
-
 
 #@permission_required('polls.add_choice', login_url='/login/')#raise_exception=True)
