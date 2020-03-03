@@ -101,13 +101,15 @@ def api_signup(request):
 
 # Course
 
-@api_view(['GET','POST'])
+@api_view(['GET','POST','PUT','DELETE'])
 @login_required(login_url='/api/login')
 def course(request):
     authenticate(request, username=request.user)
     if request.method == 'GET':
         return controller.select_all_courses(request)
     elif request.method == 'POST':        
+        return controller.create_courses(request)
+    elif request.method == 'PUT':        
         return controller.create_courses(request)
     else:
         return Response({'error':'not found'})

@@ -17,28 +17,43 @@ from course_app import models
 # work on data 
 from django.core import serializers
 
+def remove_same_in_list(some_list):
+    items_set = set(some_list)
+    items_list = []
+
+    for name in items_set:
+        items_list.append(models.Teacher.objects.get(name=name))
+
+    return items_list
+
 
 # Courses
 # C
 #@permission_required('course_app.custom_teach_permissions', login_url='/api/login/')
 
 def create_courses(request):
-    
     try:
         course = models.Course.objects.get(name=request.data.get('name'))
         return Response({'message':'course already exists'})
-
     except ObjectDoesNotExist:
         '''expected error (not exist)'''
-        teacher = models.Teacher.objects.get(id=request.user.teacher.id)
-        course = models.Course(name = request.data.get('name'))
-        course.name = request.data.get('name')
-        course.save()
-        course.teachers.set([teacher])
-        course.save()
+        pass
 
-    print(request.user.teacher)
-        
+    teacher = models.Teacher.objects.get(id=request.user.teacher.id)
+    course = models.Course.objects.create(name = request.data.get('name'))
+    teachers = request.data.get('teachers')
+    students = request.data.get('students')
+    
+    if teachers is None:
+        teachers = [teacher]
+    else:
+        teachers = remove_same_in_list(teachers)
+    
+    course.teachers.set(teachers)
+
+    course.students.set([students] if students is None else remove_same_in_list(students))
+    course.save()
+
     return Response({'message':'sucess'})
 
 # R
