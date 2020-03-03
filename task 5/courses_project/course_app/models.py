@@ -1,21 +1,28 @@
 from django.contrib.auth.models import User, AbstractUser
 from django.db import models
+from django.conf import settings
 
 # Create your models here.
 # base.User
 # AbstractUser
+#hasattr(user, 'myspecialuser')
 class Teacher(models.Model):
 
-    user = models.OneToOneField(User, on_delete = models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete = models.CASCADE)
 
     class Meta:
         permissions = [
-            ("teacher", "teacher permisions"),
+            ("custom_teach_permissions", "my custom permisions for teachers"),
         ]
 
 class Student(models.Model):
 
-    user = models.OneToOneField(User, on_delete = models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete = models.CASCADE)
+
+    class Meta:
+        permissions = [
+            ("custom_stud_permissions", "my custom permisions for students"),
+        ]
 
 class Course(models.Model):
     name = models.CharField(max_length=30, unique=True)
