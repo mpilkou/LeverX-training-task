@@ -17,15 +17,6 @@ from course_app import models
 # work on data 
 from django.core import serializers
 
-def remove_same_in_list(some_list):
-    items_set = set(some_list)
-    items_list = []
-
-    for name in items_set:
-        items_list.append(models.Teacher.objects.get(name=name))
-
-    return items_list
-
 
 # Courses
 # C
@@ -44,17 +35,33 @@ def create_courses(request):
     teachers = request.data.get('teachers')
     students = request.data.get('students')
     
-    if teachers is None:
+    if teacher is None:
         teachers = [teacher]
     else:
-        teachers = remove_same_in_list(teachers)
-    
+        teachers_set = set(teachers)
+        teachers = []
+
+        for teacher_name in teachers_set:
+            teachers.add(User.objects.get(name=teacher_name).teacher)
+
+    if students is None:
+        students = []
+    else:
+        students_set = set(students)
+        students = []
+
+        for student_name in students_set:
+            students.add(User.objects.get(name=student_name).student)
+
     course.teachers.set(teachers)
 
-    course.students.set([students] if students is None else remove_same_in_list(students))
+    course.students.set(students)
     course.save()
-
+        
     return Response({'message':'sucess'})
+
+# U
+
 
 # R
 @login_required(login_url='/api/login')
