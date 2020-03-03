@@ -13,7 +13,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 # all models
 from django.contrib.auth.models import User, Permission
 from django.core.exceptions import ObjectDoesNotExist
-from course_app import models
+from course_app import models, controller
 
 # work on data 
 from django.core import serializers
@@ -90,15 +90,26 @@ def api_signup(request):
 
 #@permission_required('polls.add_choice', login_url='/login/')#raise_exception=True)
 
-# Course
-# C
-# R
-@api_view(['GET'])
-@login_required(login_url='/api/login')
-def select_all_courses(request):
-    ansver = serializers.serialize('json', models.Course.objects.all())
-    response = Response(ansver)
-    return response
 
-# U
-# D
+
+
+#####################
+#                   #
+#   CRUD            #
+#                   #
+#####################
+
+# Course
+
+@api_view(['GET','POST'])
+@login_required(login_url='/api/login')
+def course(request):
+    authenticate(request, username=request.user)
+    if request.method == 'GET':
+        return controller.select_all_courses(request)
+    elif request.method == 'POST':        
+        return controller.create_courses(request)
+    else:
+        return Response({'error':'not found'})
+
+#@permission_required('course_app.custom_teach_permissions', login_url='/api/login/')
