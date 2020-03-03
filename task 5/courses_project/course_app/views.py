@@ -40,23 +40,19 @@ def api_login(request):
 
     cookie = None
 
-    if request.data.get('is_teacher'):
-        try:
-            user.teacher
-        except ObjectDoesNotExist:
-            return Response({'message':'incorrect role'})
-
-        cookie = True
-    elif not request.data.get('is_teacher'):
-        try:
-            user.student
-        except ObjectDoesNotExist:
-            return Response({'message':'incorrect role'})
-
-        cookie = False
-    else:
-        return Response({'message':'role not used'})    
     
+    try:
+        user.teacher
+        cookie = True
+    except ObjectDoesNotExist:
+        return Response({'message':'incorrect role'})
+
+    try:
+        user.student
+        cookie = False
+    except ObjectDoesNotExist:
+        return Response({'message':'incorrect role'})
+        
     if cookie == None:
         return Response({'message':'cookie error'})
 
