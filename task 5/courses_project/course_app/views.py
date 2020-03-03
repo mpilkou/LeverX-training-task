@@ -76,7 +76,7 @@ def api_signup(request):
         perm = Permission.objects.get(name='my custom permisions for students')
         role = models.Student()
 
-    
+    user = User(username=request.data.get('username'), password=request.data.get('password'))
     user.set_password(user.password)
     user.save()
     user.user_permissions.add(perm)
@@ -89,3 +89,16 @@ def api_signup(request):
     return res
 
 #@permission_required('polls.add_choice', login_url='/login/')#raise_exception=True)
+
+# Course
+# C
+# R
+@api_view(['GET'])
+@login_required(login_url='/api/login')
+def select_all_courses(request):
+    ansver = serializers.serialize('json', models.Course.objects.all())
+    response = Response(ansver)
+    return response
+
+# U
+# D
