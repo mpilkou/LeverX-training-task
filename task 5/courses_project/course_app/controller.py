@@ -41,7 +41,7 @@ def make_set_of_students(students):
 # C
 #@permission_required('course_app.custom_teach_permissions', login_url='/api/login/')
 
-def create_courses(request):
+def create_course(request):
     try:
         course = models.Course.objects.get(name=request.data.get('name'))
         return Response({'message':'course already exists'})
@@ -73,8 +73,15 @@ def create_courses(request):
         
     return Response({'message':'sucess'})
 
+# R
+@login_required(login_url='/api/login')
+def select_all_courses(request):
+    ansver = serializers.serialize('json', models.Course.objects.all())
+    response = Response(ansver)
+    return response
+
 # U
-def update_courses(request):
+def update_course(request):
     course = None
     try:
         course = models.Course.objects.get(name=request.data.get('name'))
@@ -96,9 +103,14 @@ def update_courses(request):
 
     return Response({'message':'sucess'})
 
-# R
-@login_required(login_url='/api/login')
-def select_all_courses(request):
-    ansver = serializers.serialize('json', models.Course.objects.all())
-    response = Response(ansver)
-    return response
+# D
+def delete_course(request):
+    course = None
+    try:
+        course = models.Course.objects.get(name=request.data.get('name'))
+    except ObjectDoesNotExist:
+        return Response({'message':'course not exist'})
+
+    course.delete()
+
+    return Response({'message':'sucess'})
