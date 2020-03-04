@@ -104,7 +104,68 @@ def api_signup(request):
 @api_view(['GET','POST','PUT','DELETE'])
 @login_required(login_url='/api/login')
 def crud_course(request):
-    authenticate(request, username=request.user)
+    
+    '''
+    get:
+        GET course 
+        produces:
+        - "application/json"
+        security:
+            - auth
+    post:
+        ADD Course 
+        consumes:
+        - "application/json"
+        produces:
+        - "application/json"
+        parameters:
+        - in: "json"
+        schema:
+        "{
+            "name": course name,
+            "teachers": [teacher_name, ..],
+            "students": [student_name, ..]
+        }"
+        required: true
+        security:
+            - auth
+                - teachers     
+    put:
+        UPDATE course
+        consumes:
+        - "application/json"
+        produces:
+        - "application/json"
+        parameters:
+        - in: "json"
+        schema:
+        "{
+            "name": course name,
+            "teachers": [teacher_name, ..],
+            "students": [student_name, ..]
+        }"
+        required: true
+        security:
+        - auth
+            -teachers
+    delete:
+        DELETE course
+        consumes:
+        - "application/json"
+        produces:
+        - "application/json"
+        parameters:
+        - in: "json"
+        schema:
+        "{
+            "name": course name,
+        }"
+        required: true
+        security:
+        - auth
+            -teachers
+    '''
+
     if request.method == 'GET':
         return controller.select_all_courses(request)
     elif request.method == 'POST':        
@@ -119,6 +180,51 @@ def crud_course(request):
 @api_view(['GET','POST','DELETE'])
 @login_required(login_url='/api/login')
 def course_edit_student(request, course_id):
+
+    '''
+    # students edit in course 
+    
+    get:
+        # GET students by course
+        produces:
+        - "application/json"
+        security:
+            - auth
+                - teachers
+    post:
+        # ADD students in course
+        consumes:
+        - "application/json"
+        produces:
+        - "application/json"
+        parameters:
+        - in: "json"
+        schema:
+        {
+	        "name": student_name
+        }
+        required: true
+        security:
+            - auth
+                - teachers
+    delete:
+        # DELETE student in
+        consumes:
+        - "application/json"
+        produces:
+        - "application/json"
+        parameters:
+        - in: "json"
+        schema:
+            {
+                "name": student_name
+            }
+        required: true
+        security:
+        - auth
+            -teachers
+    '''
+
     if request.method == 'GET':
         return controller.show_students_on_course(request, course_id)
     elif request.method == 'POST':        
@@ -131,6 +237,68 @@ def course_edit_student(request, course_id):
 @api_view(['GET','POST','PUT','DELETE'])
 @login_required(login_url='/api/login')
 def crud_lections(request, course_id):
+
+    '''
+    # crud lections
+    
+    get:
+        GET lections
+        produces:
+        - "application/json"
+        security:
+            - auth
+    post:
+        ADD lections
+        consumes:
+        - "application/json"
+        produces:
+        - "application/json"
+        parameters:
+        - in: "json"
+        schema:
+        {
+            "title": title,
+            "presentation": presentation text
+        }
+        required: true
+        security:
+            - auth
+                - teachers
+    put:
+        UPDATE lections
+        consumes:
+        - "application/json"
+        produces:
+        - "application/json"
+        parameters:
+        - in: "json"
+        schema:
+        {
+            "title": title,
+            "presentation": presentation text
+        }
+        required: true
+        security:
+        - auth
+            -teachers
+    delete:
+        DELETE lections
+        consumes:
+        - "application/json"
+        produces:
+        - "application/json"
+        parameters:
+        - in: "json"
+        schema:
+        {
+            "title": title
+        }
+        required: true
+        security:
+        - auth
+            -teachers
+    '''
+
     if request.method == 'GET':
         return controller.select_all_lections_by_course(request, course_id)
     elif request.method == 'POST':        

@@ -241,7 +241,6 @@ def create_lection(request, course_id):
 # R
 @login_required(login_url='/api/login')
 def select_all_lections_by_course(request, course_id):
-    print(request.user)
     ansver = serializers.serialize('json', models.Lection.objects.filter(course_id = course_id))
     response = Response(ansver)
     return response
