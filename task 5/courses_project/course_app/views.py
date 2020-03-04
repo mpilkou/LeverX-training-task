@@ -124,9 +124,9 @@ def lections(request, course_id):
     elif request.method == 'POST':        
         return controller.create_lection(request, course_id)
     elif request.method == 'PUT':        
-        return controller.update_course(request)
+        return controller.update_lection(request, course_id)
     elif request.method == 'DELETE':        
-        return controller.delete_course(request)
+        return controller.delete_lection(request, course_id)
     else:
         return Response({'error':'not found'})
 

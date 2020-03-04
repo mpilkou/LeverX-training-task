@@ -165,3 +165,57 @@ def select_all_lections_by_course(request, course_id):
     ansver = serializers.serialize('json', models.Lection.objects.filter(course_id = course_id))
     response = Response(ansver)
     return response
+
+# U
+@permission_required('course_app.custom_teach_permissions', login_url='/api/login/')
+def update_lection(request, course_id):
+
+    current_course = None
+    try:
+        teacher_id = request.user.teacher.id
+        current_course = models.Course.objects.get(id = course_id)
+        is_course_teacher = list(current_course.teachers.filter(id = teacher_id))
+        
+        if is_course_teacher == []:
+            return Response({'message':'you not teacher of this course'})
+    except ObjectDoesNotExist:
+        return Response({'message':'course not exist'})
+
+    current_lection = None
+    try:
+        lections = models.Lection.objects.filter(course = current_course)
+        current_lection = lections.get(title = request.data.get('title'))
+    except ObjectDoesNotExist:
+        return Response({'message':'lection not exist'})
+
+    presentation = request.data.get('presentation') if request.data.get('presentation') else lection.presentation
+
+    current_lection.presentation = presentation
+    current_lection.save()
+
+    return Response({'message':'sucess'})
+
+@permission_required('course_app.custom_teach_permissions', login_url='/api/login/')
+def delete_lection(request, course_id):
+
+    current_course = None
+    try:
+        teacher_id = request.user.teacher.id
+        current_course = models.Course.objects.get(id = course_id)
+        is_course_teacher = list(current_course.teachers.filter(id = teacher_id))
+        
+        if is_course_teacher == []:
+            return Response({'message':'you not teacher of this course'})
+    except ObjectDoesNotExist:
+        return Response({'message':'course not exist'})
+
+    current_lection = None
+    try:
+        lections = models.Lection.objects.filter(course = current_course)
+        current_lection = lections.get(title = request.data.get('title'))
+    except ObjectDoesNotExist:
+        return Response({'message':'lection not exist'})
+
+    current_lection.delete()
+
+    return Response({'message':'sucess'})
