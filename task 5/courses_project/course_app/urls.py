@@ -11,7 +11,7 @@ urlpatterns = [
     path('course', views.crud_course),
     path('course/<int:course_id>/students', views.course_edit_student),
     path('course/<int:course_id>', views.crud_lections),
-    #path('lection/<int:lections_id>', views.lections_homework),
+    path('lection/<int:lections_id>', views.lections_homework),
 
     path('test', views.test),
 

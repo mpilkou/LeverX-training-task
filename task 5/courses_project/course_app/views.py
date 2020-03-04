@@ -311,4 +311,18 @@ def crud_lections(request, course_id):
         return Response({'error':'not found'})
 
 
+@api_view(['GET','POST','PUT','DELETE'])
+@login_required(login_url='/api/login')
+def lections_homework(request, lections_id):
+    if request.method == 'GET':
+        #return controller.(request, lections_id)
+        pass
+    elif request.method == 'POST':
+        return controller.create_homework(request, lections_id)
+    elif request.method == 'PUT':        
+        return controller.update_homework(request, lections_id)
+    else:
+        return Response({'error':'not found'})
+
+
 #@permission_required('course_app.custom_teach_permissions', login_url='/api/login/')

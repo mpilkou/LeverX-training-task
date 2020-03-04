@@ -42,6 +42,6 @@ class Homework(models.Model):
     comment = models.CharField(max_length=40, blank=True)
     mark = models.DecimalField(max_digits=3, decimal_places=0, blank=True)
 
-    lection = models.ForeignKey(Lection, on_delete=models.PROTECT)
-    student = models.ForeignKey(Student, on_delete=models.PROTECT)
+    lection = models.OneToOneField(Lection, on_delete = models.PROTECT)
+    students = models.ManyToManyField(Student)
 

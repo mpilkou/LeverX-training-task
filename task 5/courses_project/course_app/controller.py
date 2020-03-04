@@ -267,7 +267,7 @@ def update_lection(request, course_id):
     except ObjectDoesNotExist:
         return Response({'message':'lection not exist'})
 
-    presentation = request.data.get('presentation') if request.data.get('presentation') else lection.presentation
+    presentation = request.data.get('presentation') if request.data.get('presentation') else current_lection.presentation
 
     current_lection.presentation = presentation
     current_lection.save()
@@ -304,3 +304,59 @@ def delete_lection(request, course_id):
 #   homework
 #
 #################
+
+@permission_required('course_app.custom_teach_permissions', login_url='/api/login/')
+def create_homework(request, lections_id):
+
+    
+    current_lection = None
+    try:
+        teacher_id = request.user.teacher.id
+        
+        current_lection = models.Lection.objects.get(id = lections_id)
+        
+        is_course_teacher = list(current_lection.course.teachers.filter(id = teacher_id))
+        if is_course_teacher == []:
+            return Response({'message':'you not teacher of this course'})
+    except ObjectDoesNotExist:
+        return Response({'message':'course not exist'})
+
+    homework = models.Homework(mark = 0)
+    homework.lection = current_lection
+    homework.save()
+    students = list(models.Student.objects.filter(course = current_lection.course))
+    homework.students.set(students)
+    homework.save()   
+        
+    return Response({'message':'sucess'})
+
+@permission_required('course_app.custom_teach_permissions', login_url='/api/login/')
+def update_homework(request, lections_id):
+    
+    current_lection = None
+    try:
+        teacher_id = request.user.teacher.id
+        
+        current_lection = models.Lection.objects.get(id = lections_id)
+        print('sssssssssss')
+        is_course_teacher = list(current_lection.course.teachers.filter(id = teacher_id))
+        print('rrrrr')
+        if is_course_teacher == []:
+            return Response({'message':'you not teacher of this course'})
+    except ObjectDoesNotExist:
+        return Response({'message':'course not exist'})
+
+
+    #txt = request.data.get('txt') if request.data.get('txt') else current_lection.homework.txt
+    mark = request.data.get('mark') if request.data.get('mark') else current_lection.homework.mark
+    comment = request.data.get('comment') if request.data.get('comment') else current_lection.homework.comment
+
+    homework = current_lection.homework
+
+    homework.mark = mark
+    homework.comment = comment
+    homework.save() 
+        
+    return Response({'message':'sucess'})
+
+#user.has_perm('myapp.change_blogpost')
