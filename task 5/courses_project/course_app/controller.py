@@ -37,10 +37,13 @@ def make_set_of_students(students):
         
     return students
 
-# Courses
+#################
+#
+#   Courses
+#
+#################
 # C
-#@permission_required('course_app.custom_teach_permissions', login_url='/api/login/')
-
+@permission_required('course_app.custom_teach_permissions', login_url='/api/login/')
 def create_course(request):
     try:
         course = models.Course.objects.get(name=request.data.get('name'))
@@ -81,6 +84,7 @@ def select_all_courses(request):
     return response
 
 # U
+@permission_required('course_app.custom_teach_permissions', login_url='/api/login/')
 def update_course(request):
     course = None
     try:
@@ -104,6 +108,7 @@ def update_course(request):
     return Response({'message':'sucess'})
 
 # D
+@permission_required('course_app.custom_teach_permissions', login_url='/api/login/')
 def delete_course(request):
     course = None
     try:
@@ -114,3 +119,49 @@ def delete_course(request):
     course.delete()
 
     return Response({'message':'sucess'})
+
+
+#################
+#
+#   Lections
+#
+#################
+
+@permission_required('course_app.custom_teach_permissions', login_url='/api/login/')
+def create_lection(request, course_id):
+    current_course = None
+    try:
+        teacher_id = request.user.teacher.id
+        current_course = models.Course.objects.get(id = course_id)
+        is_course_teacher = list(current_course.teachers.filter(id = teacher_id))
+        
+        if is_course_teacher == []:
+            return Response({'message':'you not teacher of this course'})
+    except ObjectDoesNotExist:
+        return Response({'message':'course not exist'})
+
+    title = request.data.get('title')
+    presentation = request.data.get('presentation')
+
+    if title is None:
+        Response({'message':'set title'})
+    
+    if presentation is None:
+        Response({'message':'set presentation text'})
+
+    lection = models.Lection()
+    lection.title = title
+    lection.presentation = presentation
+    lection.course = current_course
+    lection.save()
+    
+        
+    return Response({'message':'sucess'})
+
+# R
+@login_required(login_url='/api/login')
+def select_all_lections_by_course(request, course_id):
+    print(request.user)
+    ansver = serializers.serialize('json', models.Lection.objects.filter(course_id = course_id))
+    response = Response(ansver)
+    return response
