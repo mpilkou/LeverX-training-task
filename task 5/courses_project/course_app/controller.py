@@ -120,6 +120,86 @@ def delete_course(request):
 
     return Response({'message':'sucess'})
 
+# CUSTOM COURSE
+
+# select students on course
+@permission_required('course_app.custom_teach_permissions', login_url='/api/login/')
+def show_students_on_course(request, course_id):
+    current_course = None
+    try:
+        teacher_id = request.user.teacher.id
+        current_course = models.Course.objects.get(id = course_id)
+        is_course_teacher = list(current_course.teachers.filter(id = teacher_id))
+
+        if is_course_teacher == []:
+            return Response({'message':'you not teacher of this course'})
+    except ObjectDoesNotExist:
+        return Response({'message':'course not exist'})
+
+    ansver = serializers.serialize('json', current_course.students.all())
+
+    response = Response(ansver)
+    return response
+    
+
+# add student to course
+@permission_required('course_app.custom_teach_permissions', login_url='/api/login/')
+def add_student_to_course(request, course_id):
+    current_course = None
+    try:
+        teacher_id = request.user.teacher.id
+        current_course = models.Course.objects.get(id = course_id)
+        is_course_teacher = list(current_course.teachers.filter(id = teacher_id))
+
+        if is_course_teacher == []:
+            return Response({'message':'you not teacher of this course'})
+    except ObjectDoesNotExist:
+        return Response({'message':'course not exist'})
+
+    
+    student = None
+
+    try:
+        student_name = request.data.get('name')
+        student = User.objects.get(username = student_name).student
+        if is_course_teacher == []:
+            return Response({'message':'you not teacher of this course'})
+    except ObjectDoesNotExist:
+        return Response({'message':'student not exist'})
+
+    current_course.students.add(student)
+
+    return Response({'message':'sucess'})
+
+# delete student to course
+@permission_required('course_app.custom_teach_permissions', login_url='/api/login/')
+def delete_student_from_course(request, course_id):
+
+    current_course = None
+    try:
+        teacher_id = request.user.teacher.id
+        current_course = models.Course.objects.get(id = course_id)
+        is_course_teacher = list(current_course.teachers.filter(id = teacher_id))
+
+        if is_course_teacher == []:
+            return Response({'message':'you not teacher of this course'})
+    except ObjectDoesNotExist:
+        return Response({'message':'course not exist'})
+
+    
+    student = None
+
+    try:
+        student_name = request.data.get('name')
+        student = User.objects.get(username = student_name).student
+        if is_course_teacher == []:
+            return Response({'message':'you not teacher of this course'})
+    except ObjectDoesNotExist:
+        return Response({'message':'student not exist'})
+
+    current_course.students.remove(student)
+
+    return Response({'message':'sucess'})
 
 #################
 #
@@ -219,3 +299,9 @@ def delete_lection(request, course_id):
     current_lection.delete()
 
     return Response({'message':'sucess'})
+
+#################
+#
+#   homework
+#
+#################

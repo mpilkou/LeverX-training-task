@@ -103,7 +103,7 @@ def api_signup(request):
 
 @api_view(['GET','POST','PUT','DELETE'])
 @login_required(login_url='/api/login')
-def course(request):
+def crud_course(request):
     authenticate(request, username=request.user)
     if request.method == 'GET':
         return controller.select_all_courses(request)
@@ -116,9 +116,21 @@ def course(request):
     else:
         return Response({'error':'not found'})
 
+@api_view(['GET','POST','DELETE'])
+@login_required(login_url='/api/login')
+def course_edit_student(request, course_id):
+    if request.method == 'GET':
+        return controller.show_students_on_course(request, course_id)
+    elif request.method == 'POST':        
+        return controller.add_student_to_course(request, course_id)
+    elif request.method == 'DELETE':     
+        return controller.delete_student_from_course(request, course_id)
+    else:
+        return Response({'error':'not found'})
+
 @api_view(['GET','POST','PUT','DELETE'])
 @login_required(login_url='/api/login')
-def lections(request, course_id):
+def crud_lections(request, course_id):
     if request.method == 'GET':
         return controller.select_all_lections_by_course(request, course_id)
     elif request.method == 'POST':        
@@ -129,5 +141,6 @@ def lections(request, course_id):
         return controller.delete_lection(request, course_id)
     else:
         return Response({'error':'not found'})
+
 
 #@permission_required('course_app.custom_teach_permissions', login_url='/api/login/')
